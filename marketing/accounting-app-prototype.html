@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جداره Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E1B4B; --navy-2:#2A2566; --gold:#C6A15B; --gold-soft:#E7D6AD;
+  --bg:#F6F5F1; --surface:#FFFFFF; --text:#1E1B33; --muted:#6C6A82;
+  --line:#E7E5DE; --debit:#1E7A52; --credit:#B3492B; --danger:#B3492B; --ok:#1E7A52;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151428; --surface:#1E1C3A; --text:#EFEEF7; --muted:#A6A3C2; --line:#332F5C; --gold-soft:#3A3260;
+  }
+}
+:root[data-theme="dark"]{ --bg:#151428; --surface:#1E1C3A; --text:#EFEEF7; --muted:#A6A3C2; --line:#332F5C; --gold-soft:#3A3260; }
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Tajawal',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.app{display:flex;min-height:100vh;}
+.sidebar{width:230px;flex:0 0 230px;background:var(--navy);color:#EFEEF7;padding:20px 16px;display:flex;flex-direction:column;gap:22px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.crown{width:38px;height:38px;border-radius:10px;background:#151340;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex:0 0 38px;}
+.brand h1{font-size:17px;margin:0;font-weight:700;}
+.brand span{display:block;font-size:11px;color:var(--gold-soft);font-weight:400;}
+nav{display:flex;flex-direction:column;gap:4px;}
+nav button{all:unset;cursor:pointer;padding:10px 12px;border-radius:8px;font-size:14px;color:#D9D7EE;transition:background .15s;}
+nav button:hover{background:rgba(255,255,255,.06);}
+nav button.active{background:var(--gold);color:var(--navy);font-weight:700;}
+main{flex:1;padding:26px 32px;overflow-x:hidden;}
+h2{margin:0 0 4px;font-size:22px;}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:18px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;}
+.kpi b{display:block;font-size:22px;margin-top:6px;}
+.kpi span{color:var(--muted);font-size:12.5px;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);}
+th{color:var(--muted);font-weight:500;font-size:12.5px;}
+.tree ul{list-style:none;margin:0;padding-inline-start:18px;}
+.tree>ul{padding-inline-start:0;}
+.tree li{padding:5px 0;font-size:13.5px;}
+.acct-code{color:var(--muted);font-size:12px;margin-inline-end:6px;}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font-family:inherit;font-size:13.5px;}
+label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:4px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.line-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px;}
+button.btn{all:unset;cursor:pointer;background:var(--navy);color:#fff;padding:9px 16px;border-radius:8px;font-size:13.5px;font-weight:500;}
+button.btn.gold{background:var(--gold);color:var(--navy);font-weight:700;}
+button.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
+button.btn:disabled{opacity:.5;cursor:not-allowed;}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;}
+.pill.ok{background:#DCEFE5;color:var(--ok);}
+.pill.bad{background:#F6DED5;color:var(--danger);}
+:root[data-theme="dark"] .pill.ok, :root:not([data-theme="light"]) .pill.ok{background:#12331F;}
+:root[data-theme="dark"] .pill.bad, :root:not([data-theme="light"]) .pill.bad{background:#3A1D14;}
+.note{background:var(--gold-soft);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text);margin-top:10px;}
+.d{color:var(--debit);} .c{color:var(--credit);}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.reset{font-size:12px;color:var(--muted);cursor:pointer;background:none;border:none;text-decoration:underline;font-family:inherit;}
+.mono{font-family:ui-monospace,monospace;font-size:11.5px;word-break:break-all;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--line);display:block;}
+.empty{color:var(--muted);font-size:13px;padding:14px 0;text-align:center;}
+@media(max-width:760px){.app{flex-direction:column;}.sidebar{width:100%;flex:none;flex-direction:row;overflow-x:auto;align-items:center;}nav{flex-direction:row;}main{padding:18px;}}
+.formula{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;margin:8px 0;}
+.formula div{display:flex;justify-content:space-between;padding:3px 0;}
+.formula div.total{border-top:1px solid var(--line);margin-top:4px;padding-top:6px;font-weight:700;}
+@media print{
+  .sidebar,.no-print{display:none !important;}
+  main{padding:0;}
+  body{background:#fff;color:#000;}
+  .card{border:1px solid #ccc;break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="crown">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/></svg>
+      </div>
+      <div><h1>جداره</h1><span>للمحاسبة المالية</span></div>
+    </div>
+    <nav id="nav">
+      <button data-view="dash" class="active">لوحة التحكم</button>
+      <button data-view="accounts">دليل الحسابات</button>
+      <button data-view="journal">القيود اليومية</button>
+      <button data-view="ledger">الأستاذ وميزان المراجعة</button>
+      <button data-view="invoices">الفواتير</button>
+      <button data-view="vat">تقرير الضريبة</button>
+      <button data-view="vatreturn">الإقرار الربعي</button>
+      <button data-view="zakat">الزكاة</button>
+    </nav>
+  </aside>
+  <main id="main"></main>
+</div>
+<script>
+const STORE_KEYS={acc:'jadara_accounts',jr:'jadara_journal',inv:'jadara_invoices'};
+function load(k,fallback){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){console.error('storage failed',e);}}
+
+const SEED_ACCOUNTS=[
+ {code:'1000',name:'الأصول',children:[
+   {code:'1101',name:'النقدية وما في حكمها',children:[]},
+   {code:'1102',name:'البنوك',children:[]},
+   {code:'1103',name:'العملاء',children:[]},
+   {code:'1104',name:'المخزون',children:[]},
+   {code:'1201',name:'الأصول الثابتة',children:[]},
+   {code:'1202',name:'مجمع الإهلاك المتراكم',children:[]}
+ ]},
+ {code:'2000',name:'الالتزامات',children:[
+   {code:'2101',name:'الموردون',children:[]},
+   {code:'2102',name:'ضريبة القيمة المضافة المستحقة',children:[]},
+   {code:'2103',name:'مصروفات مستحقة',children:[]},
+   {code:'2201',name:'قروض طويلة الأجل',children:[]}
+ ]},
+ {code:'3000',name:'حقوق الملكية',children:[
+   {code:'3101',name:'رأس المال',children:[]},
+   {code:'3102',name:'الأرباح المرحلة',children:[]},
+   {code:'3103',name:'الاحتياطيات النظامية',children:[]}
+ ]},
+ {code:'4000',name:'الإيرادات',children:[
+   {code:'4101',name:'إيرادات المبيعات',children:[]}
+ ]},
+ {code:'5000',name:'المصروفات',children:[
+   {code:'5101',name:'تكلفة المبيعات',children:[]},
+   {code:'5102',name:'الرواتب والأجور',children:[]},
+   {code:'5104',name:'مصروفات عمومية وإدارية',children:[]}
+ ]}
+];
+
+let accounts=load(STORE_KEYS.acc,null); if(!accounts){accounts=SEED_ACCOUNTS;save(STORE_KEYS.acc,accounts);}
+let journal=load(STORE_KEYS.jr,[]);
+let invoices=load(STORE_KEYS.inv,[]);
+
+function flatAccounts(list=accounts,out=[]){list.forEach(a=>{out.push(a);if(a.children&&a.children.length)flatAccounts(a.children,out);});return out;}
+function accountName(code){const a=flatAccounts().find(x=>x.code===code);return a?a.code+' - '+a.name:code;}
+
+function fmt(n){return (Math.round(n*100)/100).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+// ---------- views ----------
+const views={};
+
+views.dash=()=>{
+  const totalDebit=journal.reduce((s,e)=>s+e.lines.reduce((a,l)=>a+(l.debit||0),0),0);
+  const salesVat=invoices.filter(i=>i.type==='sale').reduce((s,i)=>s+i.vat,0);
+  const purchVat=invoices.filter(i=>i.type==='purchase').reduce((s,i)=>s+i.vat,0);
+  const tb=trialBalanceTotals();
+  return `
+  <div class="topbar"><div><h2>لوحة التحكم</h2><p class="sub">نظرة سريعة على وضع جداره للمحاسبة المالية</p></div>
+  <button class="reset" onclick="resetDemo()">تصفير بيانات التجربة</button></div>
+  <div class="grid">
+    <div class="kpi"><span>عدد القيود اليومية</span><b>${journal.length}</b></div>
+    <div class="kpi"><span>إجمالي حركة القيود</span><b>${fmt(totalDebit)} ر.س</b></div>
+    <div class="kpi"><span>ضريبة المبيعات المحصّلة</span><b>${fmt(salesVat)} ر.س</b></div>
+    <div class="kpi"><span>ضريبة المشتريات المدفوعة</span><b>${fmt(purchVat)} ر.س</b></div>
+    <div class="kpi"><span>حالة ميزان المراجعة</span><b>${tb.balanced?'<span class="pill ok">متوازن ✓</span>':'<span class="pill bad">غير متوازن ✕</span>'}</b></div>
+  </div>
+  <div class="note">هذه نسخة تجريبية تعمل بالكامل داخل متصفحك (بدون خادم حقيقي بعد) لتختبر منطق النظام: القيود، الأستاذ العام، الفواتير، والضريبة. البيانات تُحفظ محلياً في جهازك فقط.</div>`;
+};
+
+views.accounts=()=>{
+  function renderNode(a){
+    return `<li><span class="acct-code">${a.code}</span>${a.name}
+      ${a.children&&a.children.length?`<ul>${a.children.map(renderNode).join('')}</ul>`:''}
+    </li>`;
+  }
+  return `
+  <h2>دليل الحسابات</h2><p class="sub">هيكل شجري بمعيار سعودي قياسي، قابل للتوسعة</p>
+  <div class="card">
+    <div class="row">
+      <div><label>الحساب الرئيسي</label><select id="parentSel">${flatAccounts().map(a=>`<option value="${a.code}">${a.code} - ${a.name}</option>`).join('')}</select></div>
+      <div><label>رقم الحساب الفرعي الجديد</label><input id="newCode" placeholder="مثال 1105"></div>
+    </div>
+    <div class="row"><div><label>اسم الحساب</label><input id="newName" placeholder="مثال: عهدة نثرية"></div>
+    <div style="display:flex;align-items:end;"><button class="btn gold" onclick="addAccount()">إضافة حساب</button></div></div>
+  </div>
+  <div class="card tree"><ul>${accounts.map(renderNode).join('')}</ul></div>`;
+};
+function addAccount(){
+  const parent=document.getElementById('parentSel').value;
+  const code=document.getElementById('newCode').value.trim();
+  const name=document.getElementById('newName').value.trim();
+  if(!code||!name){alert('أدخل رقم الحساب واسمه');return;}
+  const list=flatAccounts();
+  if(list.find(a=>a.code===code)){alert('رقم الحساب مستخدم مسبقاً');return;}
+  function insert(nodes){for(const n of nodes){if(n.code===parent){n.children=n.children||[];n.children.push({code,name,children:[]});return true;}if(n.children&&insert(n.children))return true;}return false;}
+  insert(accounts); save(STORE_KEYS.acc,accounts); render('accounts');
+}
+
+let lineCount=0;
+views.journal=()=>{
+  lineCount=2;
+  return `
+  <h2>القيود اليومية</h2><p class="sub">كل قيد يجب أن يتساوى فيه إجمالي المدين مع إجمالي الدائن</p>
+  <div class="card">
+    <div class="row"><div><label>التاريخ</label><input type="date" id="jrDate" value="${new Date().toISOString().slice(0,10)}"></div>
+    <div><label>البيان</label><input id="jrDesc" placeholder="وصف القيد"></div></div>
+    <div id="jrLines">
+      ${lineRow(0)}${lineRow(1)}
+    </div>
+    <button class="btn ghost" onclick="addLine()" style="margin-bottom:10px;">+ إضافة سطر</button>
+    <div id="jrBalance" class="sub"></div>
+    <button class="btn gold" onclick="saveEntry()">حفظ القيد</button>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0;font-size:15px;">القيود المسجّلة</h3>
+    ${journal.length===0?'<div class="empty">لا توجد قيود بعد</div>':`<table><thead><tr><th>التاريخ</th><th>البيان</th><th>مدين</th><th>دائن</th></tr></thead><tbody>
+      ${journal.map(e=>`<tr><td>${e.date}</td><td>${e.desc}${e.auto?' <span class="pill ok" style="font-size:10px;">تلقائي من فاتورة</span>':''}</td><td class="d">${fmt(e.lines.reduce((s,l)=>s+(l.debit||0),0))}</td><td class="c">${fmt(e.lines.reduce((s,l)=>s+(l.credit||0),0))}</td></tr>`).join('')}
+    </tbody></table>`}
+  </div>`;
+};
+function lineRow(i){
+  return `<div class="line-row" id="line${i}">
+    <div><label>${i===0?'الحساب':''}</label><select class="lineAcc">${flatAccounts().filter(a=>!a.children||a.children.length===0).map(a=>`<option value="${a.code}">${a.code} - ${a.name}</option>`).join('')}</select></div>
+    <div><label>${i===0?'مدين':''}</label><input type="number" class="lineDebit" min="0" step="0.01" oninput="checkBalance()"></div>
+    <div><label>${i===0?'دائن':''}</label><input type="number" class="lineCredit" min="0" step="0.01" oninput="checkBalance()"></div>
+    <div></div>
+  </div>`;
+}
+function addLine(){document.getElementById('jrLines').insertAdjacentHTML('beforeend',lineRow(lineCount)); lineCount++; checkBalance();}
+function checkBalance(){
+  const d=[...document.querySelectorAll('.lineDebit')].reduce((s,el)=>s+(parseFloat(el.value)||0),0);
+  const c=[...document.querySelectorAll('.lineCredit')].reduce((s,el)=>s+(parseFloat(el.value)||0),0);
+  const el=document.getElementById('jrBalance');
+  if(!el)return;
+  el.innerHTML=`إجمالي المدين: <b class="d">${fmt(d)}</b> — إجمالي الدائن: <b class="c">${fmt(c)}</b> — ${Math.abs(d-c)<0.005&&d>0?'<span class="pill ok">متوازن</span>':'<span class="pill bad">غير متوازن</span>'}`;
+}
+function saveEntry(){
+  const date=document.getElementById('jrDate').value;
+  const desc=document.getElementById('jrDesc').value.trim();
+  const rows=[...document.querySelectorAll('#jrLines .line-row')];
+  const lines=rows.map(r=>({account:r.querySelector('.lineAcc').value,debit:parseFloat(r.querySelector('.lineDebit').value)||0,credit:parseFloat(r.querySelector('.lineCredit').value)||0})).filter(l=>l.debit||l.credit);
+  const d=lines.reduce((s,l)=>s+l.debit,0), c=lines.reduce((s,l)=>s+l.credit,0);
+  if(!desc){alert('أدخل بيان القيد');return;}
+  if(lines.length<2){alert('القيد يحتاج سطرين على الأقل');return;}
+  if(Math.abs(d-c)>0.005){alert('القيد غير متوازن: المدين لا يساوي الدائن');return;}
+  journal.push({date,desc,lines}); save(STORE_KEYS.jr,journal); render('journal');
+}
+
+views.ledger=()=>{
+  const balances={};
+  journal.forEach(e=>e.lines.forEach(l=>{balances[l.account]=balances[l.account]||{debit:0,credit:0};balances[l.account].debit+=l.debit;balances[l.account].credit+=l.credit;}));
+  const rows=Object.keys(balances).map(code=>{const b=balances[code];const net=b.debit-b.credit;return {code,debit:b.debit,credit:b.credit,net};});
+  const totD=rows.reduce((s,r)=>s+r.debit,0), totC=rows.reduce((s,r)=>s+r.credit,0);
+  return `
+  <h2>الأستاذ العام وميزان المراجعة</h2><p class="sub">محسوب مباشرة من القيود اليومية المسجّلة</p>
+  <div class="card">
+  ${rows.length===0?'<div class="empty">لا توجد حركات بعد — سجّل قيداً أولاً</div>':`
+  <table><thead><tr><th>الحساب</th><th>مجموع مدين</th><th>مجموع دائن</th><th>الرصيد</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${accountName(r.code)}</td><td class="d">${fmt(r.debit)}</td><td class="c">${fmt(r.credit)}</td><td>${fmt(Math.abs(r.net))} ${r.net>=0?'مدين':'دائن'}</td></tr>`).join('')}
+  </tbody><tfoot><tr style="font-weight:700;"><td>الإجمالي</td><td class="d">${fmt(totD)}</td><td class="c">${fmt(totC)}</td><td>${Math.abs(totD-totC)<0.005?'<span class="pill ok">متوازن</span>':'<span class="pill bad">غير متوازن</span>'}</td></tr></tfoot></table>`}
+  </div>`;
+};
+function trialBalanceTotals(){
+  let d=0,c=0; journal.forEach(e=>e.lines.forEach(l=>{d+=l.debit;c+=l.credit;}));
+  return {debit:d,credit:c,balanced:Math.abs(d-c)<0.005};
+}
+
+function accountBalance(code){
+  let d=0,c=0; journal.forEach(e=>e.lines.forEach(l=>{if(l.account===code){d+=l.debit;c+=l.credit;}}));
+  return {debit:d,credit:c};
+}
+function quarterOf(dateStr){const m=parseInt(dateStr.slice(5,7),10);return Math.ceil(m/3);}
+
+views.vatreturn=()=>{
+  const q=document.getElementById('qSel')?document.getElementById('qSel').value:String(quarterOf(new Date().toISOString().slice(0,10)));
+  const year=new Date().getFullYear();
+  const inQ=invoices.filter(i=>String(quarterOf(i.date))===q);
+  const outVat=inQ.filter(i=>i.type==='sale').reduce((s,i)=>s+i.vat,0);
+  const outBase=inQ.filter(i=>i.type==='sale').reduce((s,i)=>s+i.subtotal,0);
+  const inVat=inQ.filter(i=>i.type==='purchase').reduce((s,i)=>s+i.vat,0);
+  const inBase=inQ.filter(i=>i.type==='purchase').reduce((s,i)=>s+i.subtotal,0);
+  const net=outVat-inVat;
+  return `
+  <h2>الإقرار الضريبي الربعي (VAT Return)</h2><p class="sub">مستند قابل للطباعة يطابق شكل إقرار هيئة الزكاة والضريبة والجمارك الربعي</p>
+  <div class="card no-print">
+    <label>اختر الربع</label>
+    <select id="qSel" onchange="render('vatreturn')" style="max-width:220px;">
+      <option value="1" ${q==='1'?'selected':''}>الربع الأول (يناير - مارس)</option>
+      <option value="2" ${q==='2'?'selected':''}>الربع الثاني (أبريل - يونيو)</option>
+      <option value="3" ${q==='3'?'selected':''}>الربع الثالث (يوليو - سبتمبر)</option>
+      <option value="4" ${q==='4'?'selected':''}>الربع الرابع (أكتوبر - ديسمبر)</option>
+    </select>
+  </div>
+  <div class="card" id="printArea">
+    <h3 style="margin-top:0;">جداره للمحاسبة المالية — إقرار ضريبة القيمة المضافة</h3>
+    <p class="sub">السنة المالية ${year} — الربع ${q} — الرقم الضريبي: 300000000000003</p>
+    <table>
+      <thead><tr><th>البند</th><th>الأساس الخاضع للضريبة</th><th>قيمة الضريبة (١٥٪)</th></tr></thead>
+      <tbody>
+        <tr><td>المبيعات الخاضعة (ضريبة المخرجات)</td><td>${fmt(outBase)}</td><td class="d">${fmt(outVat)}</td></tr>
+        <tr><td>المشتريات والمصروفات الخاضعة (ضريبة المدخلات)</td><td>${fmt(inBase)}</td><td class="c">${fmt(inVat)}</td></tr>
+      </tbody>
+      <tfoot><tr style="font-weight:700;"><td colspan="2">${net>=0?'صافي الضريبة المستحقة للهيئة':'صافي الضريبة القابلة للاسترداد'}</td><td>${fmt(Math.abs(net))} ر.س</td></tr></tfoot>
+    </table>
+    <div class="note">هذا التقرير محسوب مباشرة من فواتير هذا الربع المسجّلة بالنظام. عند الإقرار الفعلي في بوابة فاتورة/زاتكا، يُستخدم كمرجع مطابقة قبل الإرسال.</div>
+  </div>
+  <button class="btn ghost no-print" onclick="window.print()">طباعة / تصدير PDF</button>`;
+};
+
+views.zakat=()=>{
+  const capital=accountBalance('3101').credit-accountBalance('3101').debit;
+  const reserves=accountBalance('3103').credit-accountBalance('3103').debit;
+  const retained=accountBalance('3102').credit-accountBalance('3102').debit;
+  const loans=accountBalance('2201').credit-accountBalance('2201').debit;
+  const revenue=flatAccounts().filter(a=>a.code.startsWith('4')).reduce((s,a)=>{const b=accountBalance(a.code);return s+(b.credit-b.debit);},0);
+  const expenses=flatAccounts().filter(a=>a.code.startsWith('5')).reduce((s,a)=>{const b=accountBalance(a.code);return s+(b.debit-b.credit);},0);
+  const netProfit=revenue-expenses;
+  const fixedAssetsGross=accountBalance('1201').debit-accountBalance('1201').credit;
+  const accDepr=accountBalance('1202').credit-accountBalance('1202').debit;
+  const fixedAssetsNet=fixedAssetsGross-accDepr;
+  const additions=capital+reserves+retained+loans+netProfit;
+  const base=additions-fixedAssetsNet;
+  const zakatHijri=Math.max(base,0)*0.025;
+  const zakatGregorian=Math.max(base,0)*0.025778;
+  return `
+  <h2>الزكاة — الوعاء الزكوي</h2><p class="sub">محسوب بطريقة مصادر الأموال المعتمدة من هيئة الزكاة والضريبة والجمارك، مباشرة من دليل الحسابات</p>
+  <div class="card">
+    <h3 style="margin-top:0;font-size:15px;">الإضافات</h3>
+    <div class="formula">
+      <div><span>رأس المال (٣١٠١)</span><b>${fmt(capital)}</b></div>
+      <div><span>الاحتياطيات النظامية (٣١٠٣)</span><b>${fmt(reserves)}</b></div>
+      <div><span>الأرباح المرحلة (٣١٠٢)</span><b>${fmt(retained)}</b></div>
+      <div><span>القروض طويلة الأجل (٢٢٠١)</span><b>${fmt(loans)}</b></div>
+      <div><span>صافي الربح (الإيرادات − المصروفات)</span><b>${fmt(netProfit)}</b></div>
+      <div class="total"><span>إجمالي الإضافات</span><b>${fmt(additions)}</b></div>
+    </div>
+    <h3 style="font-size:15px;">الحسميات</h3>
+    <div class="formula">
+      <div><span>صافي الأصول الثابتة (١٢٠١ بعد خصم مجمع الإهلاك ١٢٠٢)</span><b>${fmt(fixedAssetsNet)}</b></div>
+      <div class="total"><span>إجمالي الحسميات</span><b>${fmt(fixedAssetsNet)}</b></div>
+    </div>
+    <div class="formula">
+      <div class="total"><span>الوعاء الزكوي (الإضافات − الحسميات)</span><b>${fmt(base)}</b></div>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="kpi"><span>الزكاة المستحقة (سنة هجرية ٢.٥٪)</span><b>${fmt(zakatHijri)} ر.س</b></div>
+    <div class="kpi"><span>الزكاة المستحقة (سنة ميلادية ٢.٥٧٨٪)</span><b>${fmt(zakatGregorian)} ر.س</b></div>
+  </div>
+  <div class="note">هذي بيانات تجريبية من القيود المُدخلة فقط. البنود المستبعدة رسمياً (مثل مصاريف التأسيس، والاستثمارات في شركات تابعة) لسا ما لها حسابات مستقلة بالتجربة — تُضاف عند بناء دليل الحسابات الكامل الفعلي. إذا عندك مستشار زكوي، هذا الشكل يعطيه البيانات الخام الجاهزة للمراجعة مباشرة.</div>`;
+};
+
+views.invoices=()=>{
+  return `
+  <h2>الفواتير</h2><p class="sub">فاتورة مبيعات أو مشتريات — الضريبة ١٥٪ تُحسب تلقائياً، ويُنشأ قيد محاسبي مرتبط بها</p>
+  <div class="card">
+    <div class="row">
+      <div><label>نوع الفاتورة</label><select id="invType"><option value="sale">مبيعات</option><option value="purchase">مشتريات</option></select></div>
+      <div><label>اسم العميل / المورد</label><input id="invParty" placeholder="مثال: شركة الأفق التجارية"></div>
+    </div>
+    <div class="row">
+      <div><label>وصف الصنف / الخدمة</label><input id="invDesc" placeholder="مثال: خدمات استشارية"></div>
+      <div><label>المبلغ قبل الضريبة (ر.س)</label><input type="number" id="invAmt" min="0" step="0.01" oninput="previewVat()"></div>
+    </div>
+    <div id="vatPreview" class="sub"></div>
+    <button class="btn gold" onclick="saveInvoice()">حفظ الفاتورة وترحيل القيد</button>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0;font-size:15px;">الفواتير المسجّلة</h3>
+    ${invoices.length===0?'<div class="empty">لا توجد فواتير بعد</div>':`<table><thead><tr><th>النوع</th><th>الطرف</th><th>قبل الضريبة</th><th>الضريبة ١٥٪</th><th>الإجمالي</th></tr></thead><tbody>
+    ${invoices.map(i=>`<tr><td>${i.type==='sale'?'مبيعات':'مشتريات'}</td><td>${i.party}</td><td>${fmt(i.subtotal)}</td><td>${fmt(i.vat)}</td><td>${fmt(i.total)}</td></tr>`).join('')}
+    </tbody></table>`}
+  </div>
+  ${invoices.length?`<div class="card"><h3 style="margin-top:0;font-size:15px;">حمولة رمز ZATCA (QR TLV Base64) — لآخر فاتورة مبيعات</h3>
+  <span class="mono">${lastSalesQr()}</span>
+  <div class="note">هذا الترميز يطابق بنية TLV التي تشترطها زاتكا (اسم البائع، الرقم الضريبي، الطابع الزمني، الإجمالي، مبلغ الضريبة). ربطه الفعلي بمنصة فاتورة (الشهادات والتوقيع الحي) يحتاج بياناتك الضريبية الحقيقية ويُبنى في مرحلة لاحقة.</div></div>`:''}`;
+};
+function previewVat(){
+  const amt=parseFloat(document.getElementById('invAmt').value)||0;
+  const vat=amt*0.15;
+  document.getElementById('vatPreview').innerHTML=`المبلغ قبل الضريبة: <b>${fmt(amt)}</b> — ضريبة القيمة المضافة (١٥٪): <b>${fmt(vat)}</b> — الإجمالي: <b>${fmt(amt+vat)}</b> ر.س`;
+}
+function tlvBase64(fields){
+  function tlv(tag,val){const bytes=new TextEncoder().encode(val);return new Uint8Array([tag,bytes.length,...bytes]);}
+  let all=[];
+  fields.forEach(([tag,val])=>{all=all.concat(Array.from(tlv(tag,val)));});
+  let bin=''; all.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+function lastSalesQr(){
+  const sales=invoices.filter(i=>i.type==='sale'); if(!sales.length)return '';
+  const i=sales[sales.length-1];
+  return tlvBase64([[1,'جداره للمحاسبة المالية'],[2,'300000000000003'],[3,new Date().toISOString()],[4,i.total.toFixed(2)],[5,i.vat.toFixed(2)]]);
+}
+function saveInvoice(){
+  const type=document.getElementById('invType').value;
+  const party=document.getElementById('invParty').value.trim();
+  const desc=document.getElementById('invDesc').value.trim();
+  const subtotal=parseFloat(document.getElementById('invAmt').value)||0;
+  if(!party||!desc||subtotal<=0){alert('أكمل جميع الحقول');return;}
+  const vat=+(subtotal*0.15).toFixed(2); const total=+(subtotal+vat).toFixed(2);
+  invoices.push({type,party,desc,subtotal,vat,total,date:new Date().toISOString().slice(0,10)});
+  save(STORE_KEYS.inv,invoices);
+  // auto-post journal entry
+  const lines = type==='sale'
+    ? [{account:'1103',debit:total,credit:0},{account:'4101',debit:0,credit:subtotal},{account:'2102',debit:0,credit:vat}]
+    : [{account:'5104',debit:subtotal,credit:0},{account:'2102',debit:vat,credit:0},{account:'2101',debit:0,credit:total}];
+  journal.push({date:new Date().toISOString().slice(0,10),desc:`قيد تلقائي - فاتورة ${type==='sale'?'مبيعات':'مشتريات'} - ${party}`,lines,auto:true});
+  save(STORE_KEYS.jr,journal);
+  render('invoices');
+};
+
+views.vat=()=>{
+  const sales=invoices.filter(i=>i.type==='sale'); const purch=invoices.filter(i=>i.type==='purchase');
+  const salesVat=sales.reduce((s,i)=>s+i.vat,0); const purchVat=purch.reduce((s,i)=>s+i.vat,0);
+  const net=salesVat-purchVat;
+  return `
+  <h2>تقرير الضريبة (VAT)</h2><p class="sub">ملخص ضريبة القيمة المضافة القابل للتصدير عند الإقرار الربعي</p>
+  <div class="grid">
+    <div class="kpi"><span>ضريبة المخرجات (المبيعات)</span><b class="d">${fmt(salesVat)} ر.س</b></div>
+    <div class="kpi"><span>ضريبة المدخلات (المشتريات)</span><b class="c">${fmt(purchVat)} ر.س</b></div>
+    <div class="kpi"><span>صافي الضريبة المستحقة</span><b>${fmt(net)} ر.س</b></div>
+  </div>
+  <div class="card"><h3 style="margin-top:0;font-size:15px;">تفصيل الفواتير</h3>
+  ${invoices.length===0?'<div class="empty">لا توجد فواتير بعد</div>':`<table><thead><tr><th>التاريخ</th><th>النوع</th><th>الطرف</th><th>الضريبة</th></tr></thead><tbody>
+  ${invoices.map(i=>`<tr><td>${i.date}</td><td>${i.type==='sale'?'مخرجات':'مدخلات'}</td><td>${i.party}</td><td>${fmt(i.vat)}</td></tr>`).join('')}</tbody></table>`}
+  </div>`;
+};
+
+function resetDemo(){
+  if(!confirm('سيتم حذف كل بيانات التجربة المحلية والعودة للبيانات الافتراضية. متابعة؟'))return;
+  localStorage.removeItem(STORE_KEYS.acc);localStorage.removeItem(STORE_KEYS.jr);localStorage.removeItem(STORE_KEYS.inv);
+  accounts=JSON.parse(JSON.stringify(SEED_ACCOUNTS)); journal=[]; invoices=[];
+  save(STORE_KEYS.acc,accounts); render('dash');
+}
+
+function render(view){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  document.getElementById('main').innerHTML=views[view]();
+  if(view==='journal')checkBalance();
+}
+document.getElementById('nav').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-view]'); if(!btn)return; render(btn.dataset.view);
+});
+render('dash');
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { font-size: 18px; }
+body { font-size: 1.125rem; line-height: 1.7; }
+input, select, textarea, button { font-size: inherit; font-family: inherit; }
+table { font-size: 1.05rem; }
+
+/* ===== الطباعة: المحتوى كله داخل عرض A4، بلا قصّ للأرقام ===== */
+@media print {
+  @page { size: A4; margin: 10mm; }
+  html { font-size: 10pt !important; }
+  body { background: #fff !important; color: #000 !important; width: auto !important; overflow: visible !important; }
+  .flex.min-h-screen { display: block !important; min-height: 0 !important; width: 100% !important; }
+  aside, nav, .print\:hidden, button { display: none !important; }
+  main {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  .overflow-x-auto, .overflow-x-hidden, .overflow-y-auto {
+    overflow: visible !important;
+    max-width: 100% !important;
+    max-height: none !important;
+  }
+  .print\:block { display: block !important; }
+  .print-brand-row {
+    display: flex !important;
+    flex-direction: row !important;
+    direction: ltr !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    font-size: 8pt !important;
+    page-break-inside: auto;
+  }
+  th, td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal !important;
+    padding: 2px 3px !important;
+  }
+  td[dir="ltr"] {
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    font-size: 7.5pt !important;
+  }
+  tr { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  .text-2xl { font-size: 12pt !important; }
+  .bg-white, .bg-\[\#F6F5F1\] { background: #fff !important; }
+  .border, [class*="border-"] { border-color: #ccc !important; }
+  .rounded-xl, .rounded-lg { border-radius: 0 !important; }
+  .shadow, [class*="shadow"] { box-shadow: none !important; }
+  .bg-navy { background: #1E1B4B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-logo { border-radius: 11px !important; border-color: #C6A15B !important; background: #1E1B4B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bg-goldsoft { background: #F3E9D2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jadara_user
+      POSTGRES_PASSWORD: jadara_pass
+      POSTGRES_DB: jadara_finance
+    ports:
+      - "5432:5432"
+    volumes:
+      - jadara_pg:/var/lib/postgresql/data
+volumes:
+  jadara_pg:

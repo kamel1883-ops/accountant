@@ -1,0 +1,1003 @@
+// جداره للمحاسبة — Multi-tenant schema
+// Every accounting record belongs to a Tenant (company/customer).
+// Owner/super-admin users are separate from tenant users.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Platform / Owner side ----------
+
+model Owner {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  passwordHash String
+  name      String
+  resetTokenHash    String?
+  resetTokenExpires DateTime?
+  tokenVersion Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+enum PlanCode {
+  BASIC
+  ADVANCED
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+}
+
+model Subscription {
+  id            String             @id @default(uuid())
+  tenant        Tenant             @relation(fields: [tenantId], references: [id])
+  tenantId      String             @unique
+  plan          PlanCode           @default(BASIC)
+  status        SubscriptionStatus @default(TRIAL)
+  priceAtSignup Decimal            @db.Decimal(12, 2)
+  trialEndsAt   DateTime?
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+// A lead captured from the public landing-page signup form,
+// before it becomes a real Tenant (owner reviews & activates it).
+model Lead {
+  id           String   @id @default(uuid())
+  companyName  String
+  unifiedNumber String
+  email        String
+  phone        String
+  activity     String?
+  requestType  String   // "trial" | "subscribe"
+  plan         PlanCode @default(BASIC)
+  city         String?
+  commercialRegister String?
+  crMime       String?
+  crFilename   String?
+  crData       Bytes?
+  contactName  String?
+  discountCode String?  // الكود الذي أدخله العميل عند التسجيل
+  status       String   @default("new") // new | contacted | converted | rejected
+  createdAt    DateTime @default(now())
+  customer     CustomerAccount?
+  quotes       Quote[]
+  contracts    Contract[]
+  serviceInvoices ServiceInvoice[]
+}
+
+enum DiscountType {
+  PERCENT // نسبة مئوية من سعر الباقة (قبل الضريبة)
+  FIXED   // مبلغ ثابت بالريال (قبل الضريبة)
+}
+
+// أكواد الخصم: يُنشئها المالك، ويكتبها العميل عند التسجيل فيظهر الخصم في عرض السعر والعقد.
+model DiscountCode {
+  id         String       @id @default(uuid())
+  code       String       @unique // يُخزَّن بحروف كبيرة
+  type       DiscountType
+  value      Decimal      @db.Decimal(12, 2)
+  plan       PlanCode?    // فارغ = يصلح لكل الباقات
+  maxUses    Int?         // فارغ = بلا حد
+  usedCount  Int          @default(0)
+  validFrom  DateTime?
+  validUntil DateTime?
+  active     Boolean      @default(true)
+  note       String?
+  createdAt  DateTime     @default(now())
+}
+
+// حساب العميل قبل تفعيل اشتراكه: يسجّل دخوله ليرى عرض السعر ويتابع حالة طلبه.
+// عند تأكيد الاشتراك من بوابة المالك يُنسخ منه أول مستخدم ADMIN داخل المنشأة (نفس البريد وكلمة المرور).
+model CustomerAccount {
+  id            String   @id @default(uuid())
+  lead          Lead     @relation(fields: [leadId], references: [id])
+  leadId        String   @unique
+  email         String   @unique
+  passwordHash  String
+  contactName   String
+  resetTokenHash    String?
+  resetTokenExpires DateTime?
+  tokenVersion  Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model Quote {
+  id        String   @id @default(uuid())
+  number    String   @unique
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  leadId    String
+  plan      PlanCode
+  discount  Decimal  @default(0) @db.Decimal(12, 2)
+  discountCode String?
+  issuedAt  DateTime @default(now())
+  emailedAt DateTime?
+}
+
+model Contract {
+  id           String   @id @default(uuid())
+  number       String   @unique
+  lead         Lead     @relation(fields: [leadId], references: [id])
+  leadId       String
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id])
+  tenantId     String?
+  plan         PlanCode
+  months       Int      @default(12)
+  amountAgreed Decimal  @db.Decimal(12, 2)
+  discount     Decimal  @default(0) @db.Decimal(12, 2)
+  discountCode String?
+  trialDays    Int      @default(14)
+  signedAt     DateTime @default(now())
+  emailedAt    DateTime?
+}
+
+// فاتورة اشتراك المنصة (ليست فاتورة مبيعات المنشأة). المبلغ غير خاضع للضريبة.
+model ServiceInvoice {
+  id           String   @id @default(uuid())
+  number       String   @unique
+  lead         Lead     @relation(fields: [leadId], references: [id])
+  leadId       String
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id])
+  tenantId     String?
+  plan         PlanCode
+  months       Int      @default(12)
+  amount       Decimal  @db.Decimal(12, 2)
+  discount     Decimal  @default(0) @db.Decimal(12, 2)
+  discountCode String?
+  issuedAt     DateTime @default(now())
+}
+
+// دفعة مستلمة من عميل (تحويل بنكي غالباً) — أساس قائمة التدفق النقدي في بوابة المالك.
+model Payment {
+  id         String   @id @default(uuid())
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId   String
+  amount     Decimal  @db.Decimal(12, 2)
+  receivedAt DateTime
+  reference  String?
+  method     String   @default("BANK_TRANSFER")
+  note       String?
+  createdAt  DateTime @default(now())
+}
+
+// ---------- Tenant (customer company) side ----------
+
+model Tenant {
+  id           String        @id @default(uuid())
+  companyName  String
+  unifiedNumber String       @unique
+  vatNumber    String?
+  activity     String?
+  fiscalYear   String        @default("gregorian") // gregorian | hijri
+  logoMime     String?
+  logoData     Bytes?
+  createdAt    DateTime      @default(now())
+  subscription Subscription?
+  users        User[]
+  accounts     Account[]
+  journalEntries JournalEntry[]
+  invoices     Invoice[]
+  branches     Branch[]
+  categories   ProductCategory[]
+  units        Unit[]
+  warehouses   Warehouse[]
+  products     Product[]
+  stockMovements StockMovement[]
+  stockCounts  StockCount[]
+  treasuries   Treasury[]
+  vouchers     Voucher[]
+  salesDocs    SalesDoc[]
+  purchaseDocs PurchaseDoc[]
+  payments     Payment[]
+  contracts    Contract[]
+  serviceInvoices ServiceInvoice[]
+  fiscalYears  FiscalYear[]
+  zatcaDevice  ZatcaDevice?
+  zatcaSubmissions ZatcaSubmission[]
+  zatcaAudits ZatcaAudit[]
+  supportTickets SupportTicket[]
+  saleDiscountCodes SaleDiscountCode[]
+  costCenters CostCenter[]
+  allocationRules AllocationRule[]
+  reconciliations ReconciliationSession[]
+  partyApplications PartyApplication[]
+}
+
+// أكواد خصم المبيعات داخل المنشأة. ينشئها مدير المنشأة، وتُكتب عند البيع.
+// النسبة تُطبَّق على مجموع الأصناف قبل الضريبة، والضريبة تُحسب على الصافي.
+model SaleDiscountCode {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  code      String
+  percent   Decimal  @db.Decimal(5, 2)
+  active    Boolean  @default(true)
+  note      String?
+  usedCount Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, code])
+}
+
+// A tenant can have multiple physical/logical branches. Every warehouse and,
+// eventually, every POS terminal or sales/purchase document belongs to one.
+// Kept simple in Phase 1: branches exist and users have a default branch,
+// but branch-level reporting/permissions are built out in a later phase.
+model Branch {
+  id        String      @id @default(uuid())
+  tenant    Tenant      @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  nameAr    String
+  nameEn    String?
+  isMain    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  warehouses Warehouse[]
+  users     User[]
+}
+
+
+enum UserRole {
+  ADMIN
+  ACCOUNTANT
+  VIEWER
+}
+
+model User {
+  id           String   @id @default(uuid())
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId     String
+  branch       Branch?  @relation(fields: [branchId], references: [id])
+  branchId     String?
+  email        String
+  passwordHash String
+  nameAr       String
+  nameEn       String?
+  role         UserRole @default(VIEWER)
+  resetTokenHash    String?
+  resetTokenExpires DateTime?
+  tokenVersion Int      @default(0)
+  createdAt    DateTime @default(now())
+  supportTickets SupportTicket[]
+  emailHistory UserEmailHistory[]
+
+  @@unique([tenantId, email])
+}
+
+// سجل تدقيق لا يخزّن كلمات مرور ولا رموزاً ولا مفاتيح. المستخدم العادي لا يصل إليه.
+model AuditLog {
+  id        String   @id @default(uuid())
+  tenantId  String?
+  userId    String?
+  action    String
+  resource  String?
+  result    String
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([createdAt])
+}
+
+// البريد السابق لمستخدم المنشأة. الدخول يعتمد البريد الحالي، ويبقى المستخدم على نفس المنشأة (رقمها الموحّد).
+model UserEmailHistory {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  email     String
+  changedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// الحسابات الرئيسية الخمسة. الطبيعة (مدين/دائن) والقوائم المالية تُشتق من النوع،
+// فلا يعتمد النظام على رقم الحساب في الحسابات — وهذا ما يضمن صحة المخرجات.
+enum AccountType {
+  ASSET     // الأصول — طبيعته مدينة — قائمة المركز المالي
+  LIABILITY // الخصوم — طبيعته دائنة — قائمة المركز المالي
+  EQUITY    // حقوق الملكية — طبيعته دائنة — المركز المالي + التغير في حقوق الملكية
+  SALES     // المبيعات والإيرادات — طبيعته دائنة — قائمة الدخل
+  PURCHASES // المشتريات والمصروفات — طبيعته مدينة — قائمة الدخل
+}
+
+// تصنيف فرعي يخدم القوائم المالية وقائمة التدفقات النقدية
+enum AccountSubtype {
+  CURRENT_ASSET
+  NON_CURRENT_ASSET
+  CASH              // النقدية والبنوك — أساس قائمة التدفقات النقدية
+  CONTRA_ASSET      // مجمع الإهلاك (رصيده دائن رغم أنه ضمن الأصول)
+  CURRENT_LIABILITY
+  NON_CURRENT_LIABILITY
+  CAPITAL
+  RESERVES
+  RETAINED_EARNINGS
+  DRAWINGS          // المسحوبات (رصيده مدين ضمن حقوق الملكية)
+  SALES_REVENUE
+  SALES_RETURNS     // مردودات المبيعات (مدين)
+  OTHER_INCOME
+  PURCHASES_COST    // المشتريات وتكلفة المبيعات
+  PURCHASE_RETURNS  // مردودات المشتريات (دائن)
+  OPERATING_EXPENSE
+  DEPRECIATION      // مصروف الإهلاك — يُستبعد من التدفقات النقدية التشغيلية
+  OTHER_EXPENSE
+}
+
+// Bilingual chart of accounts, tree via parentId
+model Account {
+  id       String    @id @default(uuid())
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId String
+  code     String
+  nameAr   String
+  nameEn   String
+  type     AccountType
+  subtype  AccountSubtype?
+  parentId String?
+  parent   Account?  @relation("AccountTree", fields: [parentId], references: [id])
+  children Account[] @relation("AccountTree")
+  isGroup  Boolean   @default(false) // حساب تجميعي: لا يُرحَّل عليه مباشرة
+  isSystem Boolean   @default(false) // حساب أساسي لا يُحذف
+  active   Boolean   @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, code])
+}
+
+enum EntryKind {
+  NORMAL   // قيد يومية عادي
+  OPENING  // قيد أرصدة أول المدة
+  CLOSING  // قيد إقفال (الحسابات الختامية)
+}
+
+model JournalEntry {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  number    Int?     // رقم القيد التسلسلي داخل المنشأة (يظهر في مستند الطباعة)
+  kind      EntryKind @default(NORMAL)
+  date      DateTime
+  descAr    String
+  descEn    String?
+  isAuto    Boolean  @default(false) // auto-posted from an invoice / future HR integration
+  sourceRef String?  // e.g. "invoice:<id>" or "hr:payroll:<id>"
+  createdBy String?
+  lines     JournalLine[]
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, date])
+}
+
+model JournalLine {
+  id             String       @id @default(uuid())
+  entry          JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId        String
+  accountCode    String
+  descAr         String?      // بيان السطر (اختياري، مفيد في القيود متعددة الأطراف)
+  debit          Decimal      @default(0) @db.Decimal(14, 2)
+  credit         Decimal      @default(0) @db.Decimal(14, 2)
+  costCenterId   String?
+  costCenter     CostCenter?  @relation(fields: [costCenterId], references: [id])
+
+  @@index([accountCode])
+  @@index([costCenterId])
+}
+
+enum InvoiceType {
+  SALE
+  PURCHASE
+  CREDIT_NOTE
+}
+
+// ---------- Finance module: treasuries & vouchers ----------
+
+enum TreasuryType {
+  CASH
+  BANK
+}
+
+// A cash box or bank account. Linked to a GL account code so every voucher
+// against it posts to the right place in the chart of accounts.
+model Treasury {
+  id          String       @id @default(uuid())
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  nameAr      String
+  nameEn      String?
+  type        TreasuryType
+  accountCode String       // e.g. '1101' cash or '1102' bank — where balance lives in the GL
+  createdAt   DateTime     @default(now())
+  vouchers    Voucher[]
+}
+
+enum VoucherType {
+  RECEIPT // سند قبض — money coming in (from a customer, etc.)
+  PAYMENT // سند صرف — money going out (to a supplier, expense, etc.)
+}
+
+model Voucher {
+  id          String      @id @default(uuid())
+  tenant      Tenant      @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  treasury    Treasury    @relation(fields: [treasuryId], references: [id])
+  treasuryId  String
+  type        VoucherType
+  party       String      // من / إلى
+  amount      Decimal     @db.Decimal(14, 2)
+  counterAccountCode String // the other side of the entry, e.g. '1103' customers or '5104' expenses
+  costCenterId String?
+  descAr      String
+  date        DateTime
+  createdAt   DateTime    @default(now())
+}
+
+// ---------- Sales module (quotations → orders → invoices → returns) ----------
+
+enum SalesDocType {
+  QUOTATION // عرض سعر — no stock/accounting effect
+  ORDER // أمر بيع مؤكد — no stock/accounting effect yet, precedes invoicing
+  INVOICE // فاتورة مبيعات — on confirm: deducts stock + posts journal + mirrors into Invoice
+  RETURN // مرتجع مبيعات — on confirm: restores stock + reverses journal
+}
+
+enum DocStatus {
+  DRAFT // فواتير/مستندات تحت الإعداد، تُعرض وتُطبع لكن بدون أثر محاسبي أو مخزني بعد
+  CONFIRMED
+  CANCELLED
+}
+
+model SalesDoc {
+  id          String        @id @default(uuid())
+  tenant      Tenant        @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  type        SalesDocType
+  status      DocStatus     @default(DRAFT)
+  customer    String
+  warehouseId String?
+  date        DateTime
+  notes       String?
+  customerVat String?
+  zatcaKind   String?
+  subtotal    Decimal       @default(0) @db.Decimal(14, 2) // الصافي بعد الخصم، وعليه تُحسب الضريبة
+  vat         Decimal       @default(0) @db.Decimal(14, 2)
+  total       Decimal       @default(0) @db.Decimal(14, 2)
+  discountCode    String?
+  discountPercent Decimal   @default(0) @db.Decimal(5, 2)
+  discount        Decimal   @default(0) @db.Decimal(14, 2)
+  isPos       Boolean       @default(false) // created from the POS quick-sale screen
+  costCenterId String?
+  linkedInvoiceId String?   // set once confirmed as INVOICE, points to the mirrored Invoice row
+  returnOfId  String?       // for RETURN docs, which original sale this reverses (soft reference)
+  createdAt   DateTime      @default(now())
+  lines       SalesDocLine[]
+}
+
+model SalesDocLine {
+  id        String   @id @default(uuid())
+  doc       SalesDoc @relation(fields: [docId], references: [id])
+  docId     String
+  productId String
+  quantity  Decimal  @db.Decimal(14, 3)
+  unitPrice Decimal  @db.Decimal(14, 2)
+  lineTotal Decimal  @db.Decimal(14, 2)
+}
+
+// ---------- Purchases module (requests → orders → invoices → returns) ----------
+
+enum PurchaseDocType {
+  REQUEST // طلب شراء داخلي — لا أثر مالي، فقط اعتماد داخلي
+  ORDER // أمر شراء مرسل للمورد — لا أثر مخزني/محاسبي بعد
+  INVOICE // فاتورة مشتريات — عند الاعتماد: يزيد المخزون + يرحّل قيد + ينعكس بجدول Invoice
+  RETURN // مرتجع مشتريات — عند الاعتماد: ينقص المخزون + يعكس القيد
+}
+
+model PurchaseDoc {
+  id          String            @id @default(uuid())
+  tenant      Tenant            @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  type        PurchaseDocType
+  status      DocStatus         @default(DRAFT)
+  supplier    String
+  supplierVat String?
+  supplierInvoiceNo String?
+  orderRef    String?
+  receiptStatus String @default("FULL")
+  paymentStatus String @default("CREDIT")
+  warehouseId String?
+  costCenterId String?
+  date        DateTime
+  notes       String?
+  attachmentName String?
+  attachmentMime String?
+  attachmentData Bytes?
+  subtotal    Decimal           @default(0) @db.Decimal(14, 2)
+  vat         Decimal           @default(0) @db.Decimal(14, 2)
+  total       Decimal           @default(0) @db.Decimal(14, 2)
+  linkedInvoiceId String?
+  returnOfId  String?
+  createdAt   DateTime          @default(now())
+  lines       PurchaseDocLine[]
+}
+
+model PurchaseDocLine {
+  id        String      @id @default(uuid())
+  doc       PurchaseDoc @relation(fields: [docId], references: [id])
+  docId     String
+  productId String
+  quantity  Decimal     @db.Decimal(14, 3)
+  unitPrice Decimal     @db.Decimal(14, 2)
+  lineTotal Decimal     @db.Decimal(14, 2)
+}
+
+model Invoice {
+  id        String      @id @default(uuid())
+  tenant    Tenant      @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  type      InvoiceType
+  party     String
+  descAr    String
+  subtotal  Decimal     @db.Decimal(14, 2)
+  vat       Decimal     @db.Decimal(14, 2)
+  total     Decimal     @db.Decimal(14, 2)
+  date      DateTime
+  zatcaQr   String?
+  uuid      String?
+  invoiceHash String?
+  zatcaKind String?
+  zatcaStatus String?   // PENDING | REPORTED | CLEARED | FAILED | SKIPPED
+  zatcaXml  String?     @db.Text
+  zatcaMessage String?  @db.Text
+  icv       Int?
+  createdAt DateTime    @default(now())
+}
+
+model ZatcaDevice {
+  id            String   @id @default(uuid())
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId      String   @unique
+  environment   String   @default("sandbox") // sandbox | simulation | production
+  vatNumber     String
+  orgName       String
+  orgUnit       String   @default("Main Branch")
+  commonName    String
+  serialNumber  String
+  registeredAddress String @default("Riyadh")
+  street        String   @default("King Fahd Rd")
+  buildingNumber String  @default("1234")
+  cityName      String   @default("Riyadh")
+  postalZone    String   @default("12345")
+  district      String   @default("Al Olaya")
+  businessCategory String @default("Supply of goods")
+  invoiceType   String   @default("1100")
+  crNumber      String?
+  privateKeyPem String   @db.Text
+  csrPem        String?  @db.Text
+  ccsidToken    String?  @db.Text
+  ccsidSecret   String?
+  complianceRequestId String?
+  pcsidToken    String?  @db.Text
+  pcsidSecret   String?
+  pcsidIssuedAt DateTime?
+  previousHash  String   @default("NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2QyN2FhN2FiOQ==")
+  icv           Int      @default(0)
+  status        String   @default("NEW") // NEW CSR CCSID COMPLIANCE PCSID ACTIVE
+  lastError     String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ZatcaSubmission {
+  id          String   @id @default(uuid())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  invoiceId   String?
+  salesDocId  String?
+  kind        String   // COMPLIANCE | REPORTING | CLEARANCE | RENEWAL
+  uuid        String
+  invoiceHash String
+  xml         String   @db.Text
+  httpStatus  Int?
+  response    String?  @db.Text
+  status      String
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+}
+
+// سجل تدقيق لإعادة تهيئة أو تجديد شهادة الإنتاج. لا يُخزَّن فيه OTP ولا مفاتيح.
+model ZatcaAudit {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  userId    String
+  action    String
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+}
+
+// السنة المالية: تُستخدم لأرصدة أول المدة والإقفال الختامي ومنع التعديل بعد الإقفال.
+model FiscalYear {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  name      String   // مثال: 2026
+  startDate DateTime
+  endDate   DateTime
+  closed    Boolean  @default(false)
+  closedAt  DateTime?
+  openingEntryId String?  // قيد أرصدة أول المدة
+  closingEntryId String?  // قيد الإقفال الختامي
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, name])
+}
+
+// ---------- Inventory module ----------
+
+model ProductCategory {
+  id       String    @id @default(uuid())
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId String
+  nameAr   String
+  nameEn   String?
+  products Product[]
+}
+
+// Unit of measure (piece, box, kg, meter...) — products reference a base unit.
+model Unit {
+  id       String    @id @default(uuid())
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  tenantId String
+  nameAr   String
+  nameEn   String?
+  products Product[]
+}
+
+model Warehouse {
+  id        String          @id @default(uuid())
+  tenant    Tenant          @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  branch    Branch          @relation(fields: [branchId], references: [id])
+  branchId  String
+  nameAr    String
+  nameEn    String?
+  costCenterId String?
+  createdAt DateTime        @default(now())
+  balances  StockBalance[]
+  movements StockMovement[]
+}
+
+model Product {
+  id           String           @id @default(uuid())
+  tenant       Tenant           @relation(fields: [tenantId], references: [id])
+  tenantId     String
+  sku          String
+  nameAr       String
+  nameEn       String?
+  category     ProductCategory? @relation(fields: [categoryId], references: [id])
+  categoryId   String?
+  unit         Unit?            @relation(fields: [unitId], references: [id])
+  unitId       String?
+  costPrice    Decimal          @default(0) @db.Decimal(14, 2)
+  sellPrice    Decimal          @default(0) @db.Decimal(14, 2)
+  reorderPoint Decimal          @default(0) @db.Decimal(14, 2) // low-stock alert threshold
+  isBundle     Boolean          @default(false) // "منتج مجمّع" made of other products
+  createdAt    DateTime         @default(now())
+  balances     StockBalance[]
+  movements    StockMovement[]
+
+  @@unique([tenantId, sku])
+}
+
+// Live on-hand quantity per product per warehouse — kept as a running total
+// so stock levels don't need to be recomputed from full movement history on
+// every read. Always updated inside the same transaction as a StockMovement.
+model StockBalance {
+  id          String    @id @default(uuid())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+  warehouseId String
+  quantity    Decimal   @default(0) @db.Decimal(14, 3)
+
+  @@unique([productId, warehouseId])
+}
+
+enum StockMovementType {
+  IN // purchase receipt, positive manual adjustment
+  OUT // sale issue, negative manual adjustment
+  TRANSFER // between warehouses
+  COUNT_ADJUST // correction generated from a stock count
+}
+
+model StockMovement {
+  id          String             @id @default(uuid())
+  tenant      Tenant             @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  product     Product            @relation(fields: [productId], references: [id])
+  productId   String
+  warehouse   Warehouse          @relation(fields: [warehouseId], references: [id])
+  warehouseId String
+  type        StockMovementType
+  quantity    Decimal            @db.Decimal(14, 3) // always positive; direction comes from `type`
+  reason      String?
+  sourceRef   String?            // e.g. "count:<id>" or later "invoice:<id>"
+  createdAt   DateTime           @default(now())
+}
+
+enum StockCountStatus {
+  OPEN
+  SUBMITTED
+}
+
+// جرد المخزون: a snapshot count sheet for a warehouse. Opening it freezes the
+// expected (system) quantities; submitting it compares expected vs counted
+// and auto-generates COUNT_ADJUST movements for every variance.
+model StockCount {
+  id           String            @id @default(uuid())
+  tenant       Tenant            @relation(fields: [tenantId], references: [id])
+  tenantId     String
+  warehouseId  String
+  warehouseIds String[]          @default([])
+  status       StockCountStatus  @default(OPEN)
+  countedOn    DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  submittedAt  DateTime?
+  lines        StockCountLine[]
+
+  @@index([tenantId, createdAt])
+}
+
+model StockCountLine {
+  id          String     @id @default(uuid())
+  count       StockCount @relation(fields: [countId], references: [id])
+  countId     String
+  warehouseId String
+  productId   String
+  expectedQty Decimal    @db.Decimal(14, 3)
+  countedQty  Decimal?   @db.Decimal(14, 3)
+}
+
+model SupportTicket {
+  id          String   @id @default(uuid())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId    String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  category    String
+  subject     String
+  status      String   @default("OPEN") // OPEN | WAITING_CUSTOMER | WAITING_OWNER | RESOLVED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+  messages    SupportMessage[]
+
+  @@index([tenantId, status])
+  @@index([status, updatedAt])
+}
+
+model SupportMessage {
+  id           String   @id @default(uuid())
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId     String
+  fromRole     String   // TENANT | OWNER
+  body         String   @db.Text
+  requestKind  String?  // documents | screenshot | info
+  createdAt    DateTime @default(now())
+  attachments  SupportAttachment[]
+}
+
+model SupportAttachment {
+  id        String   @id @default(uuid())
+  message   SupportMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String
+  filename  String
+  mime      String
+  data      Bytes
+}
+
+enum CostCenterType {
+  BRANCH
+  DEPARTMENT
+  PROJECT
+  CHANNEL
+  WAREHOUSE
+  SUPPORT
+}
+
+enum CostCenterStatus {
+  ACTIVE
+  STOPPED
+}
+
+// بُعد تحليلي على سطر القيد. لا يغيّر الدليل ولا اتزان القيد.
+model CostCenter {
+  id            String           @id @default(uuid())
+  tenant        Tenant           @relation(fields: [tenantId], references: [id])
+  tenantId      String
+  code          String
+  nameAr        String
+  nameEn        String?
+  type          CostCenterType
+  parentId      String?
+  parent        CostCenter?      @relation("CostCenterTree", fields: [parentId], references: [id])
+  children      CostCenter[]     @relation("CostCenterTree")
+  managerName   String?
+  status        CostCenterStatus @default(ACTIVE)
+  address       String?
+  phone         String?
+  defaultWarehouseId String?
+  defaultCashAccountCode String?
+  startDate     DateTime?
+  endDate       DateTime?
+  notes         String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  lines         JournalLine[]
+  allocationLines AllocationRuleLine[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+}
+
+model AllocationRule {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  code      String
+  nameAr    String
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lines     AllocationRuleLine[]
+
+  @@unique([tenantId, code])
+}
+
+model AllocationRuleLine {
+  id           String         @id @default(uuid())
+  rule         AllocationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  ruleId       String
+  costCenter   CostCenter     @relation(fields: [costCenterId], references: [id])
+  costCenterId String
+  percentage   Decimal        @db.Decimal(6, 2)
+}
+
+enum ReconciliationKind {
+  BANK
+  CASH
+  CUSTOMER
+  SUPPLIER
+  INVENTORY
+  VAT
+}
+
+enum ReconciliationStatus {
+  DRAFT
+  IN_PROGRESS
+  AWAITING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum ReconcileMatch {
+  UNMATCHED
+  AUTO
+  MANUAL
+  EXCLUDED
+}
+
+// جلسة مطابقة: تقارن رصيد الدفاتر مع كشف خارجي أو جرد فعلي. لا ترحّل قيداً قبل الاعتماد.
+model ReconciliationSession {
+  id               String                 @id @default(uuid())
+  tenant           Tenant                 @relation(fields: [tenantId], references: [id])
+  tenantId         String
+  kind             ReconciliationKind
+  accountCode      String
+  treasuryId       String?
+  costCenterId     String?
+  periodFrom       DateTime
+  periodTo         DateTime
+  bookBalance      Decimal                @default(0) @db.Decimal(14, 2)
+  externalOpening  Decimal                @default(0) @db.Decimal(14, 2)
+  externalClosing  Decimal                @default(0) @db.Decimal(14, 2)
+  adjustedBook     Decimal                @default(0) @db.Decimal(14, 2)
+  adjustedExternal Decimal                @default(0) @db.Decimal(14, 2)
+  difference       Decimal                @default(0) @db.Decimal(14, 2)
+  countedCash      Decimal?               @db.Decimal(14, 2)
+  custodianName    String?
+  segregation      Boolean                @default(false)
+  exceptionReason  String?
+  status           ReconciliationStatus   @default(IN_PROGRESS)
+  preparedBy       String?
+  approvedBy       String?
+  notes            String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  bookLines        ReconcileBookLine[]
+  statementLines   ReconcileStatementLine[]
+  adjustments      ReconcileAdjustment[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, accountCode, periodFrom])
+}
+
+model ReconcileBookLine {
+  id              String           @id @default(uuid())
+  session         ReconciliationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId       String
+  journalLineId   String?
+  matchStatus     ReconcileMatch   @default(UNMATCHED)
+  matchMethod     String?
+  matchGroupId    String?
+  amount          Decimal          @db.Decimal(14, 2)
+  transactionDate DateTime
+  reference       String?
+  description     String?
+  exceptionReason String?
+
+  @@index([sessionId])
+  @@index([journalLineId])
+}
+
+model ReconcileStatementLine {
+  id              String           @id @default(uuid())
+  session         ReconciliationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId       String
+  matchStatus     ReconcileMatch   @default(UNMATCHED)
+  matchMethod     String?
+  matchGroupId    String?
+  amount          Decimal          @db.Decimal(14, 2)
+  transactionDate DateTime
+  reference       String?
+  description     String
+  exceptionReason String?
+
+  @@index([sessionId, transactionDate])
+  @@index([reference])
+}
+
+model ReconcileAdjustment {
+  id              String           @id @default(uuid())
+  session         ReconciliationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId       String
+  statementLineId String?
+  journalEntryId  String?
+  debitAccount    String
+  creditAccount   String
+  amount          Decimal          @db.Decimal(14, 2)
+  status          String           @default("PROPOSED")
+  reason          String
+  createdBy       String?
+  approvedBy      String?
+  createdAt       DateTime         @default(now())
+  approvedAt      DateTime?
+}
+
+// تطبيق تحصيل أو دفعة على فاتورة. لا يغيّر القيد، ويوضّح المتبقي وغير المطبق.
+model PartyApplication {
+  id        String   @id @default(uuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  partyType String
+  partyName String
+  sourceId  String
+  targetId  String
+  amount    Decimal  @db.Decimal(14, 2)
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, partyType, partyName])
+}
+
+

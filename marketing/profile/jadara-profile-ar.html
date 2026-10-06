@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>جداره Finance</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: #1E1B33;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .cover {
+    width: 210mm; height: 297mm; page-break-after: always;
+    background: #14122E; color: #F6F1E6;
+    padding: 22mm 18mm 16mm;
+    display: flex; flex-direction: column;
+  }
+  .cover-top { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 78px; height: 78px; border-radius: 18px; flex: none;
+    background: #151340; border: 2px solid #C6A15B;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo svg { width: 46px; height: 46px; }
+  .brand { font-size: 28px; font-weight: 700; letter-spacing: 0; }
+  .subbrand { color: #E7D6AD; font-size: 16px; margin-top: 2px; }
+  .kicker { margin: 28mm 0 8px; color: #C6A15B; letter-spacing: .08em; font-size: 13px; }
+  h1 { margin: 0; font-size: 40px; line-height: 1.25; font-weight: 700; max-width: 16ch; }
+  .lead { font-size: 16px; line-height: 1.7; color: #E7E2D6; max-width: 38em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chips span { border: 1px solid #C6A15B; color: #E7D6AD; border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+  .stats { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px 0 18px; }
+  .stats div { border-top: 1px solid rgba(198,161,91,.55); padding-top: 8px; }
+  .stats b { display: block; color: #C6A15B; font-size: 22px; }
+  .stats span { display: block; color: #E7E2D6; font-size: 12px; line-height: 1.35; margin-top: 2px; }
+  .cover-bottom { border-top: 1px solid rgba(198,161,91,.45); padding-top: 14px; }
+  .cover-bottom p { margin: 4px 0; font-size: 13.5px; color: #E7E2D6; }
+  .legal { color: #C6A15B !important; }
+  .sheet {
+    width: 210mm; height: 297mm; page-break-after: always;
+    background: #F7F4EE; position: relative;
+  }
+  .sheet-body { padding: 14mm 14mm 16mm; }
+  h2 { margin: 0 0 8px; font-size: 26px; line-height: 1.25; color: #14122E; }
+  h3 { margin: 0; font-size: 15px; color: #14122E; }
+  .eyebrow { margin: 0 0 4px; color: #8A6A32; font-size: 12px; font-weight: 700; }
+  .prose, .note { margin: 0 0 12px; font-size: 13px; line-height: 1.65; color: #3C3954; }
+  .pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .pillar { background: #fff; border-top: 3px solid #C6A15B; border-radius: 10px; padding: 10px 12px; }
+  .pillar p, .points { font-size: 12.5px; line-height: 1.6; color: #3C3954; margin: 6px 0 0; }
+  .points { margin-top: 12px; padding-inline-start: 18px; }
+  .points li { margin: 4px 0; }
+  .shots { display: flex; flex-direction: column; gap: 8px; }
+  .shot { margin: 0; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #E4DCC8; }
+  .shot img { width: 100%; height: 68mm; object-fit: contain; object-position: center; display: block; background: #EFEAE0; }
+  .shot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .shot-row .shot img { height: 52mm; }
+  .aside { margin: 8px 0 0; background: #14122E; color: #F6F1E6; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.55; }
+  figcaption { padding: 7px 10px 9px; }
+  figcaption b { display: block; font-size: 13px; }
+  figcaption span { display: block; font-size: 11.5px; line-height: 1.45; color: #5C5870; margin-top: 2px; }
+  .group { margin: 0 0 8px; }
+  .group h3 { background: #14122E; color: #F6F1E6; display: inline-block; padding: 3px 10px; border-radius: 7px; font-size: 13px; }
+  .group ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+  .group li { background: #fff; border-radius: 8px; padding: 6px 10px; display: grid; grid-template-columns: 46mm 1fr; gap: 8px; align-items: start; }
+  .group li b { font-size: 12px; }
+  .group li span { font-size: 11.5px; line-height: 1.45; color: #3C3954; }
+  .whys { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .why { background: #fff; border-radius: 10px; padding: 8px 10px; border-inline-start: 3px solid #C6A15B; }
+  .why b { display: block; font-size: 13px; }
+  .why span { display: block; font-size: 11.5px; line-height: 1.45; color: #3C3954; margin-top: 2px; }
+  .clients { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .client { margin: 0; background: #fff; border-radius: 10px; padding: 8px; text-align: center; border: 1px solid #E4DCC8; }
+  .client img { height: 22mm; width: 100%; object-fit: contain; }
+  .client figcaption { font-size: 11px; line-height: 1.35; color: #1E1B33; padding: 6px 2px 2px; }
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .plan { background: #fff; border-radius: 12px; padding: 10px 12px; border: 1px solid #E4DCC8; }
+  .plan.featured { background: #14122E; color: #F6F1E6; border-color: #14122E; }
+  .plan .tag { margin: 4px 0 8px; font-size: 12px; color: #6C6A82; }
+  .plan.featured .tag { color: #E7D6AD; }
+  .price { margin: 0 0 8px; }
+  .price b { font-size: 28px; color: #14122E; }
+  .plan.featured .price b { color: #C6A15B; }
+  .price span { display: block; font-size: 12px; color: #6C6A82; }
+  .plan.featured .price span { color: #E7D6AD; }
+  .plan ul { margin: 0; padding-inline-start: 16px; }
+  .plan li { font-size: 11.5px; line-height: 1.4; margin: 3px 0; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .step { display: flex; gap: 8px; background: #fff; border-radius: 10px; padding: 8px 10px; }
+  .step > span { width: 22px; height: 22px; border-radius: 50%; background: #C6A15B; color: #14122E; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; font-size: 12px; }
+  .step b { font-size: 13px; }
+  .step p { margin: 2px 0 0; font-size: 11.5px; line-height: 1.4; color: #3C3954; }
+  .block-title { margin: 12px 0 6px; font-size: 15px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .facts div { background: #fff; border-radius: 8px; padding: 6px 10px; }
+  .facts small { display: block; color: #8A6A32; font-size: 10.5px; }
+  .facts b { font-size: 12.5px; font-weight: 650; }
+  .vision { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .vision img { height: 16mm; width: auto; }
+  .vision p { margin: 0; font-size: 12.5px; color: #3C3954; }
+  .fine { margin: 8px 0 0; font-size: 10px; color: #6C6A82; }
+  .run {
+    position: absolute; left: 14mm; right: 14mm; bottom: 7mm;
+    display: flex; justify-content: space-between; gap: 8px;
+    font-size: 10px; color: #6C6A82; border-top: 1px solid #E4DCC8; padding-top: 4px;
+  }
+</style>
+</head>
+<body>
+<section class="cover">
+    <div class="cover-top">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/><path d="M6 20h12"/></svg></span>
+      <div>
+        <div class="brand">جداره Finance</div>
+        <div class="subbrand">للمحاسبة المالية</div>
+      </div>
+    </div>
+    <p class="kicker">الملف التعريفي · ٢٠٢٦</p>
+    <h1>محاسبة المنشأة، من الفاتورة حتى القوائم</h1>
+    <p class="lead">نظام سحابي سعودي يجمع البيع والشراء والمخزون والقيود والتقارير في مكان واحد، بالعربية والإنجليزية.</p>
+    <div class="chips"><span>فواتير وضريبة ١٥٪</span><span>قيود وقوائم مالية</span><span>مخزون ونقطة بيع</span></div>
+    <div class="stats"><div><b>١٥٪</b><span>ضريبة تُحسب تلقائياً</span></div><div><b>+١٢</b><span>قسماً في نظام واحد</span></div><div><b>٢</b><span>العربية والإنجليزية</span></div><div><b>٢٤ ساعة</b><span>للتفعيل بعد التحويل</span></div></div>
+    <div class="cover-bottom">
+      <p>تجربة ١٤ يوماً · التفعيل خلال ٢٤ ساعة من استلام التحويل</p>
+      <p class="ltr">www.jadara-finance.com · info@jadara-finance.com · 0594700782</p>
+      <p class="legal">شركة مدى الإنجاز الحديث</p>
+    </div>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">من نحن</p>
+    <h2>نظام واحد لصاحب المنشأة والمحاسب</h2>
+    <p class="prose">جداره Finance يجمع عمل المحاسب اليومي في مكان واحد. البيع والشراء يولّدان قيداً متوازناً، والتقارير تخرج بالعربية والإنجليزية من نفس البيانات. يعمل من المتصفح على الجوال والحاسب دون تثبيت، وبيانات كل منشأة معزولة عن غيرها.</p>
+    <div class="pillars">
+    <article class="pillar"><h3>رؤيتنا</h3><p>أن تدير المنشأة السعودية فواتيرها وحساباتها وقوائمها المالية من جداره Finance، في مكان واحد يناسب ضريبة القيمة المضافة والزكاة والفوترة الإلكترونية في المملكة.</p></article>
+    <article class="pillar"><h3>رسالتنا</h3><p>نبسّط العمل المالي اليومي لصاحب المنشأة والمحاسب: البيع والشراء والمخزون تُرحَّل قيودها تلقائياً، والتقارير بالعربية والإنجليزية، وبيانات كل منشأة معزولة عن غيرها.</p></article>
+    <article class="pillar"><h3>أهدافنا</h3><p>نساعد المنشأة على إصدار فواتيرها مع رمز QR، ومتابعة الضريبة والزكاة، وإخراج ميزان المراجعة والقوائم المالية، دون التنقل بين أكثر من برنامج.</p></article></div>
+    <ul class="points"><li>فاتورة ضريبية برمز QR، والضريبة تُحسب وتُرحَّل للقيد دون إدخال يدوي.</li><li>دفتر أستاذ وميزان مراجعة والقوائم المالية الأربع تُبنى من القيود نفسها.</li><li>مخزون ونقطة بيع وفروع متعددة حين تكبر المنشأة، دون برنامج ثانٍ.</li><li>التفعيل خلال ٢٤ ساعة من استلام التحويل البنكي.</li></ul>
+    <div class="whys">
+    <article class="why"><b>بيانات معزولة</b><span>حسابات كل منشأة لا تختلط بمنشأة أخرى، والصلاحيات من داخل المنشأة.</span></article>
+    <article class="why"><b>عربي وإنجليزي</b><span>الواجهة ودليل الحسابات والتقارير والمستندات باللغتين.</span></article>
+    <article class="why"><b>قيود تلقائية</b><span>الفاتورة والسند والمرتجع وجرد المخزون تُرحَّل دون قيد يدوي.</span></article>
+    <article class="why"><b>نسخة احتياطية يومية</b><span>مزود الاستضافة يأخذ نسخة يومية لكامل السيرفر، وتشمل الحسابات والقيود والفواتير والمخزون.</span></article>
+    <article class="why"><b>ينمو مع المنشأة</b><span>البداية بالأساسية، والترقية للمتقدمة في أي وقت مع احتساب الفرق عن المدة المتبقية.</span></article>
+    <article class="why"><b>من المتصفح</b><span>لا تثبيت. يعمل على الحاسب والجوال.</span></article></div></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 2 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">من داخل النظام</p>
+    <h2>شاشات العمل اليومي</h2>
+    <p class="note">لقطات توضيحية ببيانات تجريبية، والشكل هو شكل النظام نفسه.</p>
+    <div class="shots">
+      <div class="shot wide">
+    <figure class="shot">
+      <img src="../film-src/dash.png" alt="">
+      <figcaption><b>لوحة التحكم</b><span>بطاقات المبيعات والمشتريات والربح والعملاء فوق الرسوم، ثم توزيع المبالغ وأعمدة المبيعات والتكلفة والربح.</span></figcaption>
+    </figure></div>
+      <div class="shot-row">
+        
+    <figure class="shot">
+      <img src="../film-src/sales.png" alt="">
+      <figcaption><b>قائمة المبيعات</b><span>فواتير المبيعات بالحالة والمبلغ، والضريبة تُحسب تلقائياً عند اعتماد الفاتورة.</span></figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="../film-src/trial.png" alt="">
+      <figcaption><b>ميزان المراجعة</b><span>أول المدة والحركة والرصيد. القيد لا يُعتمد إلا إذا تساوى المدين والدائن.</span></figcaption>
+    </figure>
+      </div>
+    </div></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 3 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">أقسام النظام</p>
+    <h2>كل قسم مربوط بالقيد</h2>
+    <p class="note">أي عملية بيع أو شراء أو صرف تنعكس على القيود والمخزون والتقارير. الأقسام أدناه هي قائمة النظام كما يراها مدير المنشأة.</p>
+    
+    <section class="group">
+      <h3>التشغيل اليومي</h3>
+      <ul><li><b>لوحة التحكم</b><span>بطاقات ملونة للمبيعات والمشتريات والربح والسيولة والعملاء، مع رسوم التوزيع والأعمدة.</span></li><li><b>المبيعات</b><span>عروض أسعار، أوامر بيع، فواتير ضريبية، ومرتجعات.</span></li><li><b>المشتريات</b><span>فواتير المشتريات. الطلبات وأوامر الشراء والمرتجعات في الباقة المتقدمة.</span></li><li><b>نقطة البيع</b><span>كاشير يخصم المخزون ويرحّل القيد ويسجّل التحصيل. الباقة المتقدمة.</span></li><li><b>المالية</b><span>الخزائن والحسابات البنكية وسندات القبض والصرف.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>المحاسبة</h3>
+      <ul><li><b>دليل الحسابات</b><span>شجرة حسابات سعودية ثنائية اللغة، قابلة للتوسعة.</span></li><li><b>القيود اليومية</b><span>قيود متوازنة، مركّبة، بعدد أطراف مفتوح.</span></li><li><b>ميزان المراجعة</b><span>أول المدة والحركة والرصيد الختامي.</span></li><li><b>القوائم المالية</b><span>الدخل، المركز المالي، التدفقات النقدية، والتغير في حقوق الملكية.</span></li><li><b>الفترات المالية</b><span>سنوات مالية، أرصدة افتتاحية، وقيد إقفال. الفترات المقفلة لا تقبل ترحيلاً.</span></li><li><b>فحص سلامة البيانات</b><span>يتأكد أن القيود متوازنة قبل الاعتماد على التقارير.</span></li></ul>
+    </section>
+    <p class="aside">الباقة الأساسية تغطي المحاسبة والفواتير والمالية. المتقدمة تضيف المخزون ونقطة البيع والفروع والإقرار الضريبي والزكاة.</p></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 4 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">أقسام النظام</p>
+    <h2>كل قسم مربوط بالقيد</h2>
+    
+    <section class="group">
+      <h3>المخزون والفروع</h3>
+      <ul><li><b>المنتجات</b><span>أصناف وتصنيفات ووحدات قياس. الباقة المتقدمة.</span></li><li><b>الفروع والمستودعات</b><span>أكثر من فرع ومستودع، وتحويل بين المستودعات. الباقة المتقدمة.</span></li><li><b>جرد المخزون</b><span>جرد فعلي وتسوية الفرق بقيد تلقائي. الباقة المتقدمة.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>الضريبة والزكاة والفوترة</h3>
+      <ul><li><b>الإقرار الربعي</b><span>ضريبة المخرجات والمدخلات في إقرار قابل للطباعة. الباقة المتقدمة.</span></li><li><b>الزكاة</b><span>احتساب الوعاء الزكوي بطريقة مصادر الأموال. الباقة المتقدمة.</span></li><li><b>الفوترة الإلكترونية</b><span>فاتورة ضريبية ومبسطة وإشعارات دائنة ومدينة، ورمز QR بترميز TLV. التكامل الفني مُختبر في بيئة المطورين. الربط الإنتاجي لكل منشأة ببياناتها وتفويضها في منصة فاتورة. الاشتراك وحده لا يعني اعتماداً من الهيئة.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>الإدارة والدعم</h3>
+      <ul><li><b>المستخدمون والصلاحيات</b><span>مستخدم واحد في الأساسية، وحتى خمسة في المتقدمة، مع صلاحيات لمدير المنشأة.</span></li><li><b>كودات الخصم</b><span>خصم على فاتورة المبيعات قبل احتساب الضريبة.</span></li><li><b>تذكرة دعم فني</b><span>من داخل النظام. فريق جداره يرى المشكلة ويعمل على حلها ويفيد بالنتيجة.</span></li><li><b>التقارير</b><span>مبيعات، مشتريات، عملاء، موردون، مخزون، ومحاسبة. تُطبع بالعربية أو الإنجليزية.</span></li><li><b>الطباعة</b><span>شعار المنشأة واسمها ورقمها الموحّد أعلى الصفحة يساراً، وشعار جداره يميناً.</span></li></ul>
+    </section></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 5 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">عملاؤنا</p>
+    <h2>منشآت تعمل على جداره</h2>
+    <p class="note">شعارات منشآت تستخدم النظام في المقاولات والتفصيل والتجزئة والخدمات.</p>
+    <div class="clients">
+    <figure class="client">
+      <img src="../clients/business-code.png" alt="">
+      <figcaption>شركة كود الأعمال للمقاولات</figcaption>
+    </figure>
+    <figure class="client">
+      <img src="../clients/darz.png" alt="">
+      <figcaption>مصنع درز للخياطة الراقية</figcaption>
+    </figure>
+    <figure class="client">
+      <img src="../clients/al-moied.png" alt="">
+      <figcaption>آل معيض</figcaption>
+    </figure></div>
+    <p class="eyebrow" style="margin-top:14px">الباقات</p>
+    <h2>اشتراك سنوي، والسعر المعروض نهائي</h2>
+    <p class="note">تجربة مجانية ١٤ يوماً. المبلغ غير خاضع لضريبة القيمة المضافة. الترقية من الأساسية إلى المتقدمة تُحتسب عن المدة المتبقية فقط.</p>
+    <div class="plans">
+    <article class="plan">
+      <h3>الأساسية</h3>
+      <p class="tag">للمنشآت الصغيرة والمكاتب الناشئة</p>
+      <p class="price"><b>1,350</b><span>ر.س / سنوياً</span></p>
+      <ul><li>دليل الحسابات الثنائي اللغة والقيود اليومية</li><li>الأستاذ العام وميزان المراجعة</li><li>فواتير المبيعات والمشتريات وضريبة ١٥٪</li><li>عروض الأسعار وأوامر البيع والمرتجعات</li><li>الخزائن والبنوك وسندات القبض والصرف</li><li>تقارير المبيعات والمشتريات وكشوف الحسابات</li><li>مستخدم واحد، ودعم عبر البريد</li></ul>
+    </article>
+    <article class="plan featured">
+      <h3>المتقدمة</h3>
+      <p class="tag">للمنشآت المتوسطة والمكاتب المحاسبية</p>
+      <p class="price"><b>2,000</b><span>ر.س / سنوياً</span></p>
+      <ul><li>كل مزايا الباقة الأساسية</li><li>المنتجات والمستودعات وجرد المخزون</li><li>نقطة البيع وتعدد الفروع</li><li>طلبات الشراء وأوامر الشراء ومرتجعات المشتريات</li><li>الإقرار الضريبي الربعي القابل للطباعة</li><li>وحدة احتساب الوعاء الزكوي</li><li>حتى ٥ مستخدمين وصلاحيات، ودعم بأولوية عبر البريد والهاتف</li></ul>
+    </article></div></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 6 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">الاشتراك</p>
+    <h2>أربع خطوات وتبدأ</h2>
+    <div class="steps">
+    <article class="step"><span>1</span><div><b>أنشئ الحساب</b><p>اسم المنشأة، الرقم الموحّد، الجوال، البريد، والنشاط.</p></div></article>
+    <article class="step"><span>2</span><div><b>يصل عرض السعر</b><p>ملف PDF على البريد، وفيه بيانات التحويل وشهادة الآيبان.</p></div></article>
+    <article class="step"><span>3</span><div><b>حوّل وأرسل الإيصال</b><p>إلى info@jadara-finance.com</p></div></article>
+    <article class="step"><span>4</span><div><b>نفعّل الحساب</b><p>نؤكد الاشتراك ونرسل العقد، والدخول بالبريد وكلمة المرور.</p></div></article></div>
+    <h3 class="block-title">التحويل البنكي</h3>
+    <div class="facts">
+      <div><small>البنك</small><b>بنك إس تي سي STC Bank</b></div>
+      <div><small>المستفيد</small><b>شركة مدى الإنجاز الحديث</b></div>
+      <div><small>رقم الحساب</small><b class="ltr">1324441685</b></div>
+      <div><small>الآيبان</small><b class="ltr">SA0778000000001324441685</b></div>
+    </div>
+    <h3 class="block-title">تواصل معنا</h3>
+    <p class="note">فريق جداره يرى طلبك ويعمل عليه ويفيدك بالنتيجة. نسعد بخدمتك.</p>
+    <div class="facts">
+      <div><small>الجوال</small><b class="ltr">+966 59 470 0782</b></div>
+      <div><small>واتساب</small><b class="ltr">0594700782</b></div>
+      <div><small>البريد</small><b class="ltr">info@jadara-finance.com</b></div>
+      <div><small>الموقع</small><b class="ltr">www.jadara-finance.com</b></div>
+      <div><small>الكيان</small><b>شركة مدى الإنجاز الحديث</b></div>
+      <div><small>الرقم الموحّد</small><b class="ltr">7054695650</b></div>
+      <div><small>المدير العام</small><b>وليد حسن القروص</b></div>
+    </div>
+    <div class="vision">
+      <img src="../vision-2030.png" alt="">
+      <p>نتوافق مع رؤية المملكة العربية السعودية ٢٠٣٠</p>
+    </div>
+    <p class="fine">© ٢٠٢٦ جداره Finance — شركة مدى الإنجاز الحديث. جميع الحقوق محفوظة. الصور ببيانات تجريبية.</p></div>
+    <footer class="run">
+      <span>جداره Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>صفحة 7 / 7</span>
+    </footer>
+  </section>
+</body>
+</html>

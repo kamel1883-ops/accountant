@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{dir}}"><head><meta charset="utf-8"><title>{{docTitle}} {{number}}</title>
+<style>
+@page{size:A4;margin:12mm}*{box-sizing:border-box}
+body{margin:0;color:#1E1B33;font-size:12.5px;line-height:1.7;font-family:'Tajawal','Noto Sans Arabic','DejaVu Sans',sans-serif}
+.muted{color:#6C6A82}.ltr{direction:ltr;unicode-bidi:embed;display:inline-block;font-family:'DejaVu Sans Mono',monospace}
+table{width:100%;border-collapse:collapse}
+.head td{vertical-align:top;padding-bottom:8px}.head .t{font-size:21px;font-weight:700}.head .t small{display:block;font-size:12px;color:#6C6A82;font-weight:400}
+.head .meta{text-align:left;font-size:12px}
+.brand{border-bottom:2.5px solid #1E1B4B;padding-bottom:12px;margin-bottom:14px}
+.brand td{vertical-align:middle}
+.logo{width:44px;height:44px;border-radius:11px;background:#1E1B4B;border:1.5px solid #C6A15B;text-align:center;padding-top:8px}
+.brand h1{margin:0;font-size:18px}
+.parties td{width:50%;vertical-align:top;padding:10px 14px;background:#FBFAF6;border:1px solid #E3DFD3;border-radius:10px}
+.parties h4{margin:0 0 6px;font-size:12.5px;color:#6C6A82;font-weight:600}
+.items{margin-top:14px}
+.items th{background:#1E1B4B;color:#fff;font-size:12px;padding:8px 6px;font-weight:600}
+.items th small{display:block;font-weight:400;font-size:9px;opacity:.85}
+.items.tax th,.items.tax td{font-size:10px;padding:6px 3px}
+.items td{padding:7px 6px;border-bottom:1px solid #E3DFD3;font-size:12px}
+.num{text-align:left;direction:ltr;font-family:'DejaVu Sans Mono',monospace}
+.totals{margin-top:12px;width:52%;margin-inline-start:auto}
+.totals td{padding:6px 10px;border-bottom:1px solid #E3DFD3}
+.totals td.v{text-align:left;font-weight:700;direction:ltr;font-family:'DejaVu Sans Mono',monospace}
+.totals tr.g td{background:#1E1B4B;color:#fff;font-size:15px;border:0}
+.totals tr.g td.v{color:#E7D6AD}
+.qr{margin-top:16px;text-align:center}
+.qr img{width:112px;height:112px}
+.qr .cap{font-size:11px;color:#6C6A82;margin-top:4px}
+.foot{margin-top:18px;display:flex;justify-content:space-between}
+.sline{border-top:1px solid #1E1B4B;width:180px;margin-top:40px;text-align:center;padding-top:4px}
+</style></head><body>
+<table class="head"><tr>
+  <td class="t">{{docTitle}}<small>{{docTitleEn}}</small></td>
+  <td class="meta">{{lNo}}: <b class="ltr">{{number}}</b><br>{{lDate}}: <span class="ltr">{{date}}</span>{{{vatNumberLine}}}</td>
+</tr></table>
+<table class="brand"><tr>
+  <td style="width:56px"><div class="logo">{{{logo}}}</div></td>
+  <td style="width:1%;white-space:nowrap"><h1>{{brand}}</h1>{{{brandExtra}}}</td>
+  {{{companySide}}}
+</tr></table>
+
+<table class="parties"><tr>
+  <td><h4>{{sellerLabel}} / Seller</h4><b>{{sellerName}}</b><br><span class="muted">{{lVatNo}}:</span> <span class="ltr">{{sellerVat}}</span>{{{sellerExtra}}}</td>
+  <td><h4>{{buyerLabel}} / Buyer</h4><b>{{buyerName}}</b><br><span class="muted">{{lVatNo}}:</span> <span class="ltr">{{buyerVat}}</span></td>
+</tr></table>
+
+<table class="{{itemsClass}}">
+  <thead><tr>{{{itemsHead}}}</tr></thead>
+  <tbody>{{{itemsHtml}}}</tbody>
+</table>
+
+<table class="totals">
+  {{{totalsBody}}}
+  <tr><td>{{lVat}}</td><td class="v">{{vat}}</td></tr>
+  <tr class="g"><td>{{lGrand}}</td><td class="v">{{total}}</td></tr>
+</table>
+
+{{{qrBlock}}}
+
+{{{signBlock}}}
+</body></html>

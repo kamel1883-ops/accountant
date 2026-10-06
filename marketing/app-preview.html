@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جداره Finance — معاينة النظام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1E1B4B;--navy3:#151340;--gold:#C6A15B;--gold2:#E7D6AD;--soft:#F3E9D2;--bg:#F6F5F1;--sf:#fff;--tx:#1E1B33;--mu:#6C6A82;--ln:#E7E5DE;--ok:#1E7A52;--bad:#B3492B;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131226;--sf:#1C1A3A;--tx:#EFEEF7;--mu:#A6A3C2;--ln:#332F5C;--soft:#2E2850}}
+:root[data-theme="dark"]{--bg:#131226;--sf:#1C1A3A;--tx:#EFEEF7;--mu:#A6A3C2;--ln:#332F5C;--soft:#2E2850}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Tajawal','DejaVu Sans',system-ui,sans-serif;min-height:100vh}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:30px;width:100%;max-width:380px}
+.logo{width:50px;height:50px;border-radius:13px;background:var(--navy);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.box h1{text-align:center;margin:0;font-size:19px}.box .s{text-align:center;color:var(--mu);font-size:12px;margin:2px 0 18px}
+label{font-size:12px;color:var(--mu);display:block;margin-bottom:4px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--tx);font:inherit;font-size:13.5px;margin-bottom:12px}
+.btn{width:100%;background:var(--gold);color:var(--navy);font-weight:800;border:0;border-radius:9px;padding:11px;font:inherit;font-weight:800;font-size:14px;cursor:pointer}
+.lnk{font-size:12px;color:var(--mu);text-decoration:underline;cursor:pointer}
+.hint{background:var(--soft);border-radius:9px;padding:9px 12px;font-size:12px;margin-top:14px;text-align:center}
+.app{display:flex;min-height:100vh}
+aside{width:232px;flex:0 0 232px;background:var(--navy);color:#fff;padding:18px 14px;display:flex;flex-direction:column;gap:16px}
+.br{display:flex;align-items:center;gap:10px}.br .lg{width:38px;height:38px;border-radius:10px;background:var(--navy3);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center}
+.br b{font-size:15px;display:block;line-height:1.2}.br small{color:var(--gold2);font-size:11px}
+nav{display:flex;flex-direction:column;gap:2px}nav button{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;font-size:13.5px;color:rgba(255,255,255,.82)}
+nav button:hover{background:rgba(255,255,255,.08)}nav button.on{background:var(--gold);color:var(--navy);font-weight:800}
+.langbtn{border:1px solid rgba(255,255,255,.25);background:none;color:rgba(255,255,255,.85);border-radius:8px;padding:5px 12px;font:inherit;font-size:12px;cursor:pointer;margin-top:auto}
+.langbtn:hover{background:rgba(255,255,255,.1)}
+.prbtn{border:1px solid var(--ln);background:var(--sf);color:var(--tx);border-radius:9px;padding:7px 14px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.out{margin-top:8px;font-size:12px;color:rgba(255,255,255,.55);text-decoration:underline;cursor:pointer}
+main{flex:1;padding:24px 28px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.chip{font-size:12px;background:var(--soft);border-radius:20px;padding:4px 12px}
+h2{margin:0;font-size:21px}.sub{color:var(--mu);font-size:13px;margin:2px 0 16px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:13px;padding:16px 18px;margin-bottom:14px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kp div{background:var(--sf);border:1px solid var(--ln);border-radius:13px;padding:14px}.kp span{color:var(--mu);font-size:12px}.kp b{display:block;font-size:20px;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--ln)}th{color:var(--mu);font-weight:500;font-size:12px}
+.pill{font-size:11.5px;font-weight:800;padding:2px 10px;border-radius:20px;background:var(--soft)}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tabs button{border:1px solid var(--ln);background:var(--sf);color:var(--tx);border-radius:9px;padding:7px 15px;font:inherit;font-size:13px;cursor:pointer}.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}.frm input,.frm select{margin:0}
+.gb{background:var(--gold);color:var(--navy);font-weight:800;border:0;border-radius:9px;padding:10px 16px;font:inherit;font-size:13px;cursor:pointer}
+.pos{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;align-content:start}
+.pp{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px;text-align:right;cursor:pointer;font:inherit;color:var(--tx)}.pp:hover{border-color:var(--gold)}.pp small{color:var(--mu)}
+.bars{display:flex;align-items:flex-end;gap:10px;height:130px;margin-top:8px}.bars i{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;font-style:normal;font-size:11px;color:var(--mu)}.bars u{width:100%;border-radius:5px 5px 0 0;background:var(--gold);display:block}.bars u.p{background:var(--navy)}
+.pair{display:flex;gap:3px;align-items:flex-end;width:100%}
+.frx{background:var(--bg);border:1px dashed var(--ln);border-radius:9px;padding:10px 12px;font-size:12.5px}.frx div{display:flex;justify-content:space-between;padding:3px 0}.frx .t{border-top:1px solid var(--ln);margin-top:4px;padding-top:6px;font-weight:800}
+
+.note{font-size:11.5px;color:var(--mu);margin-top:14px;text-align:center}
+.ln{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--ln);font-size:13px}
+.ln.b{font-weight:800}.ln.t{border-top:2px solid var(--navy);border-bottom:0;margin-top:4px;padding-top:8px}
+.ln.i{color:var(--mu);padding-inline-start:16px;font-size:12.5px}
+.ln span:last-child{font-family:ui-monospace,monospace;direction:ltr}
+.res{display:flex;justify-content:space-between;background:var(--navy);color:#fff;border-radius:10px;padding:11px 14px;font-weight:800;margin-top:8px}
+.res span:last-child{font-family:ui-monospace,monospace;direction:ltr;font-size:17px;color:var(--gold2)}
+.ok2{color:var(--ok);font-weight:800;font-size:13px;margin-top:10px}
+.bad2{color:var(--bad);font-weight:800;font-size:13px;margin-top:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.hd{background:var(--soft);border-radius:7px;padding:4px 9px;font-size:13px;font-weight:800;margin:10px 0 4px}
+.mono{font-family:ui-monospace,monospace;direction:ltr}
+.tree td:first-child{font-size:13px}
+.gp{font-weight:800}
+.badge{font-size:10px;background:var(--soft);color:var(--navy);border-radius:20px;padding:1px 7px;margin-inline-start:6px}
+.card5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.card5 button{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:11px;text-align:right;cursor:pointer;font:inherit;color:var(--tx)}
+.card5 button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.card5 small{display:block;opacity:.7;font-size:11px}.card5 b{font-size:13.5px}
+@media(max-width:820px){.two{grid-template-columns:1fr}.card5{grid-template-columns:repeat(2,1fr)}}
+
+@media(max-width:820px){.app{flex-direction:column}aside{width:100%;flex:none;flex-direction:row;overflow-x:auto;align-items:center;padding:10px}.br{flex:0 0 auto}nav{flex-direction:row}nav button{white-space:nowrap}.out{display:none}main{padding:16px}.pos{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="login" class="center"><div class="box">
+  <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/><path d="M6 20h12"/></svg></div>
+  <h1>جداره Finance</h1><div class="s">للمحاسبة المالية</div>
+  <label>البريد الإلكتروني</label><input type="email" value="admin@alayna.example" dir="ltr">
+  <label>كلمة المرور</label><input type="password" value="••••••••••" dir="ltr">
+  <div style="margin-bottom:14px"><span class="lnk" onclick="toast('في النظام الفعلي: يصلك رابط استعادة كلمة المرور على بريدك')">نسيت كلمة المرور؟</span></div>
+  <button class="btn" onclick="enter()">تسجيل الدخول</button>
+  <p style="text-align:center;font-size:12px;color:var(--mu);margin:14px 0 0">ما عندك حساب؟ <span class="lnk" style="color:var(--navy);font-weight:800" onclick="toast('في النظام الفعلي: صفحة إنشاء حساب + إصدار عرض السعر تلقائياً')">أنشئ حساباً</span></p>
+  <div id="toast" class="hint" style="display:none"></div>
+  <div class="hint" style="background:transparent;border:1px dashed var(--ln)">معاينة بيانات تجريبية — اضغط «تسجيل الدخول» لدخول حساب منشأة العيّنة</div>
+</div></div>
+
+<div id="app" class="app" style="display:none">
+  <aside>
+    <div class="br"><span class="lg"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/></svg></span><span><b>جداره</b><small>للمحاسبة المالية</small></span></div>
+    <nav id="nav"></nav><button class="langbtn" id="lang" onclick="toggleLang()">English</button><span class="out" onclick="leave()">تسجيل الخروج</span>
+  </aside>
+  <main><div class="top"><span class="chip">منشأة العيّنة التجارية · الفرع الرئيسي</span><span class="chip">المدير: محمّد العبدالله</span></div><div id="view"></div></main>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const tbl=(h,r)=>`<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const frm=(f,btn)=>`<div class="card"><div class="frm">${f.map(x=>`<div><label>${x[0]}</label>${x[1]?`<select>${x[1].map(o=>`<option>${o}</option>`).join('')}</select>`:`<input placeholder="${x[2]||''}">`}</div>`).join('')}<button class="gb" onclick="toast2()">${btn}</button></div></div>`;
+const ok='<span class="pill ok">مُعتمد</span>', dr='<span class="pill">مسودة</span>';
+const head=(t,s)=>`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h2>${T(t)}</h2><p class="sub">${s}</p></div><button class="prbtn" onclick="window.print()">🖨 ${T('طباعة')}</button></div>`;
+const tabs=(a)=>`<div class="tabs">${a.map((x,i)=>`<button class="${i?'':'on'}" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>`;
+
+const P=[['كرسي مكتبي',450],['طاولة اجتماعات',1800],['شاشة 27 بوصة',900],['لوحة مفاتيح',120],['ماوس لاسلكي',85],['طابعة ليزر',1300]];
+let cart={};
+const S={
+dash:()=>head('لوحة التحكم','نظرة سريعة على وضع منشأتك المالي')+`<div class="kp"><div><span>مبيعات الشهر</span><b>184,500 ر.س</b></div><div><span>مشتريات الشهر</span><b>61,400 ر.س</b></div><div><span>ضريبة المخرجات</span><b>27,675 ر.س</b></div><div><span>ضريبة المدخلات</span><b>9,210 ر.س</b></div><div><span>ميزان المراجعة</span><b class="ok">متوازن ✓</b></div></div>
+<div class="card"><b style="font-size:14px">المبيعات والمشتريات — آخر 6 أشهر</b><div class="bars">${[['2026-04',60,30],['2026-05',75,40],['2026-06',55,35],['2026-07',90,45],['2026-08',100,50],['2026-09',85,38]].map(m=>`<i><span class="pair"><u style="height:${m[1]}px"></u><u class="p" style="height:${m[2]}px"></u></span>${m[0]}</i>`).join('')}</div><p class="sub" style="margin:8px 0 0"><span style="color:var(--gold)">■</span> مبيعات &nbsp; <span style="color:var(--navy)">■</span> مشتريات</p></div>
+<div class="card"><b style="font-size:14px">آخر الحركات</b>${tbl(['المستند','الطرف','المبلغ','الحالة'],[['فاتورة مبيعات','شركة الأفق التجارية','12,650',ok],['فاتورة مشتريات','مؤسسة النخبة','5,750',ok],['سند قبض','شركة الأفق التجارية','12,650',ok],['عرض سعر','مكتب الرياض للهندسة','8,280',dr]])}</div>`,
+pos:()=>head('نقطة البيع (POS)','بيع سريع: يخصم المخزون ويرحّل الفاتورة والقيد ويسجّل التحصيل بضغطة واحدة')+`<div class="pos"><div class="pg">${P.map((p,i)=>`<button class="pp" onclick="add(${i})"><b>${p[0]}</b><br><small>${p[1]} ر.س</small></button>`).join('')}</div><div class="card" id="cart"></div></div>`,
+sales:()=>head('المبيعات','عروض أسعار، أوامر بيع، فواتير، ومرتجعات — تُحفظ مسودة ثم تُعتمد')+tabs(['عرض سعر','أمر بيع','فاتورة مبيعات','مرتجع مبيعات'])+frm([['اسم العميل',0,'شركة الأفق التجارية'],['المستودع',['المستودع الرئيسي','مستودع الرياض']],['الصنف',['كرسي مكتبي','طاولة اجتماعات','شاشة 27 بوصة']],['الكمية',0,'1']],'حفظ كمسودة')+`<div class="card">${tbl(['العميل','الإجمالي','الحالة'],[['شركة الأفق التجارية','12,650',ok],['مكتب الرياض للهندسة','8,280',dr],['مؤسسة الجود','3,450',ok]])}</div>`,
+purchases:()=>head('المشتريات','طلبات شراء، أوامر شراء، فواتير، ومرتجعات')+tabs(['طلب شراء','أمر شراء','فاتورة مشتريات','مرتجع مشتريات'])+frm([['اسم المورد',0,'مؤسسة النخبة'],['المستودع',['المستودع الرئيسي','مستودع الرياض']],['الصنف',['شاشة 27 بوصة','لوحة مفاتيح']],['الكمية',0,'10']],'حفظ كمسودة')+`<div class="card">${tbl(['المورد','الإجمالي','الحالة'],[['مؤسسة النخبة','5,750',ok],['شركة التقنية المتقدمة','14,950',dr]])}</div>`,
+accounts:()=>head('دليل الحسابات','هيكل ثنائي اللغة (عربي / English) بمعيار قياسي')+`<div class="card">${tbl(['الرقم','الاسم بالعربي','Name','النوع'],[['1000','الأصول','Assets','رئيسي'],['1101','النقدية وما في حكمها','Cash and cash equivalents','فرعي'],['1103','العملاء','Accounts receivable','فرعي'],['1104','المخزون','Inventory','فرعي'],['2102','ضريبة القيمة المضافة المستحقة','VAT payable','فرعي'],['3101','رأس المال','Capital','فرعي'],['4101','إيرادات المبيعات','Sales revenue','فرعي'],['5102','الرواتب والأجور','Salaries and wages','فرعي']])}</div>`,
+journal:()=>head('القيود اليومية','يجب أن يتساوى المدين مع الدائن قبل الحفظ')+frm([['التاريخ',0,'2026-09-28'],['البيان',0,'قيد افتتاحي'],['الحساب',['1101 النقدية','3101 رأس المال']],['مدين',0,'50,000'],['دائن',0,'0']],'إضافة سطر')+`<div class="card"><p class="sub" style="margin:0 0 8px">مدين: <b class="ok">50,000</b> — دائن: <b class="bad">0</b> — <span class="pill bad">غير متوازن</span></p>${tbl(['التاريخ','البيان','المصدر'],[['2026-09-27','فاتورة مبيعات — شركة الأفق','<span class="pill">تلقائي</span>'],['2026-09-26','سند قبض — شركة الأفق','<span class="pill">تلقائي</span>'],['2026-09-20','قيد افتتاحي','يدوي']])}</div>`,
+invoices:()=>head('الفواتير (قديم)','إدخال سريع لفاتورة بدون أصناف — الضريبة 15٪ تُحسب تلقائياً')+frm([['النوع',['مبيعات','مشتريات']],['الطرف',0,'اسم العميل / المورد'],['المبلغ قبل الضريبة',0,'1000']],'حفظ الفاتورة')+`<p class="sub">الضريبة: 150.00 — الإجمالي: 1,150.00 ر.س</p>`,
+products:()=>head('المنتجات','الأصناف والتصنيفات ووحدات القياس')+frm([['رمز الصنف SKU',0,'CH-001'],['اسم الصنف',0,'كرسي مكتبي'],['التصنيف',['أثاث','إلكترونيات']],['الوحدة',['قطعة','كرتون']],['سعر البيع',0,'450']],'إضافة منتج')+`<div class="card">${tbl(['SKU','الاسم','التصنيف','البيع','الرصيد'],[['CH-001','كرسي مكتبي','أثاث','450','42'],['MO-027','شاشة 27 بوصة','إلكترونيات','900','6 <span class="bad">⚠️ منخفض</span>'],['KB-010','لوحة مفاتيح','إلكترونيات','120','58']])}</div>`,
+warehouses:()=>head('الفروع والمستودعات','كل مستودع يتبع فرعاً — أساس الفروع المتعددة')+`<div class="card"><b style="font-size:14px">الفروع</b><p><span class="pill">الفرع الرئيسي (رئيسي)</span> <span class="pill">فرع جدة</span></p></div><div class="card">${tbl(['المستودع','الفرع'],[['المستودع الرئيسي','الفرع الرئيسي'],['مستودع الرياض','الفرع الرئيسي'],['مستودع جدة','فرع جدة']])}</div>`,
+stock:()=>head('جرد المخزون','افتح جرداً، سجّل الكميات الفعلية، واعتمده — الفروقات تُسوّى تلقائياً')+`<div class="card">${tbl(['الصنف','بالنظام','الفعلي','الفرق'],[['كرسي مكتبي','42','<input style="margin:0;width:80px" value="41">','<span class="bad">-1</span>'],['شاشة 27 بوصة','6','<input style="margin:0;width:80px" value="6">','0'],['لوحة مفاتيح','58','<input style="margin:0;width:80px" value="60">','<span class="ok">+2</span>']])}<p style="margin:12px 0 0"><button class="gb" onclick="toast2()">اعتماد الجرد وتسوية الفروقات</button></p></div>`,
+finance:()=>head('المالية','الخزائن والحسابات البنكية وسندات القبض والصرف')+`<div class="kp"><div><span>الصندوق الرئيسي</span><b>18,400 ر.س</b></div><div><span>حساب بنك STC</span><b>246,900 ر.س</b></div></div>`+frm([['الخزينة',['الصندوق الرئيسي','حساب بنك STC']],['النوع',['سند قبض','سند صرف']],['من / إلى',0,'شركة الأفق'],['المبلغ',0,'12650']],'حفظ السند وترحيل القيد')+`<div class="card">${tbl(['النوع','الطرف','الخزينة','المبلغ'],[['قبض','شركة الأفق التجارية','حساب بنك STC','12,650'],['صرف','مؤسسة النخبة','حساب بنك STC','5,750']])}</div>`,
+reports:()=>head('التقارير','مبيعات، مشتريات، مخزون، وكشف حساب')+tabs(['المبيعات','المشتريات','المخزون','كشف حساب'])+`<div class="kp"><div><span>الأساس</span><b>160,435 ر.س</b></div><div><span>الضريبة</span><b>24,065 ر.س</b></div><div><span>الإجمالي</span><b>184,500 ر.س</b></div></div><div class="card"><b style="font-size:14px">المبيعات حسب العميل</b>${tbl(['العميل','عدد الفواتير','الإجمالي'],[['شركة الأفق التجارية','6','92,300'],['مؤسسة الجود','4','58,200'],['مكتب الرياض للهندسة','2','34,000']])}</div>`,
+vat:()=>head('الإقرار الربعي','مستند قابل للطباعة يطابق شكل إقرار ضريبة القيمة المضافة')+`<div class="card"><b>جداره Finance — إقرار ضريبة القيمة المضافة</b><p class="sub">السنة 2026 — الربع الثالث</p>${tbl(['البند','الأساس','الضريبة 15٪'],[['مبيعات (المخرجات)','184,500','27,675'],['مشتريات (المدخلات)','61,400','9,210']])}<p style="font-weight:800;margin:10px 0">صافي الضريبة المستحقة للهيئة: 18,465 ر.س</p><button class="gb" onclick="toast2()">طباعة / تصدير PDF</button></div>`,
+zakat:()=>head('الزكاة — الوعاء الزكوي','بطريقة مصادر الأموال، محسوبة من دليل الحسابات')+`<div class="card"><div class="frx"><div><span>رأس المال</span><b>500,000</b></div><div><span>الاحتياطيات النظامية</span><b>40,000</b></div><div><span>الأرباح المرحلة</span><b>120,000</b></div><div><span>القروض طويلة الأجل</span><b>0</b></div><div><span>صافي الربح</span><b>96,500</b></div><div><span>يُخصم: صافي الأصول الثابتة</span><b>-210,000</b></div><div class="t"><span>الوعاء الزكوي</span><b>546,500</b></div></div></div><div class="kp"><div><span>الزكاة (هجرية 2.5٪)</span><b>13,662.50 ر.س</b></div><div><span>الزكاة (ميلادية 2.578٪)</span><b>14,087.98 ر.س</b></div></div>`
+};
+
+const m=n=>Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const L=(t,v,c='')=>`<div class="ln ${c}"><span>${t}</span><span>${m(v)}</span></div>`;
+
+S.accounts=()=>head('دليل الحسابات','خمسة حسابات رئيسية، وتقدر تفتح حسابات فرعية غير محدودة تحت أي حساب')+`
+<div class="card5">${[['1','الأصول','الأصول',458725],['2','الخصوم','الخصوم',151325],['3','حقوق الملكية','الملكية',307400],['4','المبيعات','المبيعات',29500],['5','المشتريات','المشتريات',27100]].map((r,i)=>`<button class="${i?'':'on'}" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on')"><small>${r[0]} · ${r[2]}</small><b>${r[1]}</b><small class="mono">${m(r[3])}</small></button>`).join('')}</div>
+<div class="card"><table class="tree"><thead><tr><th>الحساب</th><th>English</th><th>الرصيد</th><th></th></tr></thead><tbody>
+${[[0,'1','الأصول','Assets','',1],[1,'11','الأصول المتداولة','Current assets','',1],[2,'1101','الصندوق','Cash on hand',49900,0],[2,'1102','البنوك','Banks',171500,0],[2,'1103','العملاء (المدينون)','Accounts receivable',0,0],[2,'1105','المخزون','Inventory',80000,0],[2,'1106','ضريبة القيمة المضافة - المدخلات','Input VAT',900,0],[1,'12','الأصول غير المتداولة','Non-current assets','',1],[2,'1202','الآلات والمعدات','Machinery',190000,0],[2,'1290','مجمع الإهلاك','Accumulated depreciation',33000,0]]
+.map(r=>`<tr><td style="padding-inline-start:${r[0]*20}px"><span class="mono" style="color:var(--mu);font-size:11px;margin-inline-end:6px">${r[1]}</span><span class="${r[5]?'gp':''}">${r[2]}</span>${r[5]?'<span class="badge">تجميعي</span>':''}</td><td style="color:var(--mu);font-size:11.5px">${r[3]}</td><td class="mono">${r[4]===''?'':m(r[4])}</td><td><span class="lnk" onclick="alertMsg()">+ حساب فرعي</span></td></tr>`).join('')}
+</tbody></table></div>`;
+
+S.journal=()=>head('القيود اليومية','قيد مركّب بأي عدد من الأطراف — عشرين طرفاً أو أكثر')+`
+<div class="card"><div class="frm" style="margin-bottom:10px"><div><label>التاريخ</label><input value="2026-04-01"></div><div style="grid-column:span 2"><label>بيان القيد</label><input value="إثبات مصروفات شهر إبريل"></div></div>
+<table><thead><tr><th style="width:26px">م</th><th>الحساب</th><th style="width:150px">بيان السطر</th><th style="width:110px">مدين</th><th style="width:110px">دائن</th></tr></thead><tbody>
+${[[1,'5201 — الرواتب والأجور','رواتب إبريل','12,000',''],[2,'5202 — الإيجارات','إيجار المقر','5,000',''],[3,'5203 — الكهرباء والماء','فاتورة الكهرباء','800',''],[4,'5204 — الاتصالات والإنترنت','اشتراك الإنترنت','300',''],[5,'1101 — الصندوق','سداد نقدي','','18,100']]
+.map(r=>`<tr><td style="color:var(--mu)">${r[0]}</td><td>${r[1]}</td><td style="color:var(--mu);font-size:12px">${r[2]}</td><td class="mono">${r[3]||'—'}</td><td class="mono">${r[4]||'—'}</td></tr>`).join('')}
+</tbody><tfoot><tr style="border-top:2px solid var(--navy);font-weight:800"><td colspan="3">الإجمالي</td><td class="mono">18,100.00</td><td class="mono">18,100.00</td></tr></tfoot></table>
+<div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="gold" onclick="alertMsg()">+ سطر</button><button class="gold" onclick="alertMsg()">+ 5 أسطر</button><span class="ok2" style="margin-inline-start:auto">✓ القيد متوازن</span></div>
+<button class="gold" style="margin-top:10px" onclick="alertMsg()">حفظ القيد</button></div>
+<div class="card"><b style="font-size:14px">القيود المسجّلة</b>${tbl(['رقم','التاريخ','البيان','النوع','المبلغ','إجراء'],[
+['1','2026-01-01','أرصدة أول المدة — 2026','<span class="pill">أرصدة أول المدة</span>','480,000.00','<span class="lnk" onclick="alertMsg()">طباعة</span>'],
+['2','2026-03-10','فاتورة مبيعات — شركة الأفق <span class="pill">تلقائي</span>','قيد يومية','11,500.00','<span class="lnk" onclick="alertMsg()">طباعة</span>'],
+['3','2026-04-01','إثبات مصروفات شهر إبريل','قيد يومية','18,100.00','<span class="lnk" onclick="alertMsg()">طباعة</span>']])}</div>`;
+
+S.trial=()=>head('ميزان المراجعة','بأعمدة رصيد أول المدة وحركة الفترة والرصيد الختامي — للمراجعة الشهرية')+`
+<div class="tabs"><button class="on">هذا الشهر</button><button>الشهر الماضي</button><button>السنة الحالية</button><button>تفصيلي</button></div>
+<div class="card"><table><thead><tr><th>الحساب</th><th colspan="2">رصيد أول المدة</th><th colspan="2">حركة الفترة</th><th colspan="2">الرصيد الختامي</th></tr>
+<tr style="font-size:11px;color:var(--mu)"><th></th><th>مدين</th><th>دائن</th><th>مدين</th><th>دائن</th><th>مدين</th><th>دائن</th></tr></thead><tbody>
+${[['1101 الصندوق','50,000','—','23,000','23,100','49,900','—'],['1102 البنوك','200,000','—','11,500','40,000','171,500','—'],['1105 المخزون','80,000','—','—','—','80,000','—'],['2101 الموردون','—','40,000','—','6,900','—','46,900'],['3101 رأس المال','—','300,000','—','—','—','300,000'],['4101 مبيعات البضاعة','—','—','—','10,000','—','10,000'],['5201 الرواتب والأجور','—','—','12,000','—','12,000','—']]
+.map(r=>`<tr><td>${r[0]}</td>${r.slice(1).map(c=>`<td class="mono">${c}</td>`).join('')}</tr>`).join('')}
+</tbody><tfoot><tr style="border-top:2px solid var(--navy);font-weight:800"><td>الإجمالي</td><td class="mono">330,000</td><td class="mono">330,000</td><td class="mono">119,575</td><td class="mono">119,575</td><td class="mono">458,725</td><td class="mono">458,725</td></tr></tfoot></table>
+<div class="ok2">✓ الميزان متوازن</div></div>`;
+
+S.statements=()=>head('القوائم المالية','محسوبة مباشرة من القيود المرحّلة — أي قيد جديد ينعكس فوراً')+`
+<div class="tabs"><button class="on" onclick="stTab(this,'inc')">قائمة الدخل</button><button onclick="stTab(this,'bs')">المركز المالي</button><button onclick="stTab(this,'cf')">التدفقات النقدية</button><button onclick="stTab(this,'eq')">التغير في حقوق الملكية</button></div>
+<div id="stBox"></div>`;
+const ST={
+ inc:()=>`<div class="card"><b>قائمة الدخل</b><div class="sub">عن الفترة من 2026-01-01 إلى 2026-12-31</div>
+ ${L('المبيعات والإيرادات',30000,'b')}${L('4101 — مبيعات البضاعة',10000,'i')}${L('4103 — مبيعات نقاط البيع',20000,'i')}${L('يُخصم: مردودات المبيعات',-500)}
+ ${L('صافي المبيعات',29500,'b t')}${L('تكلفة المبيعات',-6000,'b')}${L('5101 — مشتريات البضاعة',6000,'i')}
+ ${L('مجمل الربح',23500,'b t')}${L('المصروفات التشغيلية',-21100,'b')}
+ ${['5201 — الرواتب والأجور|12000','5202 — الإيجارات|5000','5203 — الكهرباء والماء|800','5204 — الاتصالات والإنترنت|300','5210 — مصروف الإهلاك|3000'].map(x=>L(x.split('|')[0],+x.split('|')[1],'i')).join('')}
+ ${L('الربح التشغيلي',2400,'b t')}<div class="res"><span>صافي الربح</span><span>${m(2400)}</span></div><div class="sub" style="margin-top:6px">هامش صافي الربح: 8.1%</div></div>`,
+ bs:()=>`<div class="card"><b>قائمة المركز المالي</b><div class="sub">كما في 2026-12-31</div><div class="two">
+ <div><div class="hd">الأصول</div>${L('الأصول المتداولة',302300,'b')}${['1101 — الصندوق|49900','1102 — البنوك|171500','1105 — المخزون|80000','1106 — ضريبة المدخلات|900'].map(x=>L(x.split('|')[0],+x.split('|')[1],'i')).join('')}
+ ${L('الأصول غير المتداولة (بالصافي)',157000,'b')}${L('1202 — الآلات والمعدات',190000,'i')}${L('1290 — مجمع الإهلاك',-33000,'i')}${L('إجمالي الأصول',458725,'b t')}</div>
+ <div><div class="hd">الخصوم وحقوق الملكية</div>${L('الخصوم المتداولة',51325,'b')}${['2101 — الموردون|46900','2102 — ضريبة المخرجات|4425'].map(x=>L(x.split('|')[0],+x.split('|')[1],'i')).join('')}
+ ${L('الخصوم غير المتداولة',100000,'b')}${L('2201 — قروض طويلة الأجل',100000,'i')}${L('إجمالي الخصوم',151325,'b t')}
+ ${L('حقوق الملكية',305000,'b')}${['3101 — رأس المال|300000','3103 — الأرباح المرحّلة|10000','3105 — مسحوبات الملاك|-5000'].map(x=>L(x.split('|')[0],+x.split('|')[1],'i')).join('')}${L('نتيجة الفترة',2400,'i')}
+ ${L('إجمالي الخصوم وحقوق الملكية',458725,'b t')}</div></div>
+ <div class="ok2">✓ القائمة متوازنة: الأصول = الخصوم + حقوق الملكية</div></div>`,
+ cf:()=>`<div class="card"><b>قائمة التدفقات النقدية (الطريقة غير المباشرة)</b><div class="sub">عن الفترة من 2026-01-01 إلى 2026-12-31</div>
+ <div class="hd">الأنشطة التشغيلية</div>${L('صافي الربح',2400)}${L('يُضاف: الإهلاك (مصروف غير نقدي)',3000,'i')}${L('التغير في الأصول المتداولة',-900,'i')}${L('التغير في الخصوم المتداولة',11325,'i')}${L('صافي النقد من الأنشطة التشغيلية',15825,'b t')}
+ <div class="hd">الأنشطة الاستثمارية</div>${L('1202 — شراء آلات ومعدات',-40000,'i')}${L('صافي النقد من الأنشطة الاستثمارية',-40000,'b')}
+ <div class="hd">الأنشطة التمويلية</div>${L('3105 — مسحوبات الملاك',-5000,'i')}${L('صافي النقد من الأنشطة التمويلية',-5000,'b')}
+ ${L('صافي التغير في النقدية',-28600,'b t')}${L('النقدية أول المدة',250000)}${L('النقدية آخر المدة',221400,'b')}
+ <div class="ok2">✓ مطابَقة: التغير المحسوب يساوي حركة النقدية الفعلية</div></div>`,
+ eq:()=>`<div class="card"><b>قائمة التغير في حقوق الملكية</b><div class="sub">عن الفترة من 2026-01-01 إلى 2026-12-31</div>
+ ${tbl(['البند','رصيد أول المدة','الحركة','رصيد آخر المدة'],[['رأس المال','300,000.00','—','300,000.00'],['الاحتياطيات','—','—','—'],['الأرباح المرحّلة','10,000.00','—','10,000.00'],['المسحوبات','—','(5,000.00)','(5,000.00)'],['صافي ربح الفترة','—','2,400.00','2,400.00']])}
+ <div class="ln b t"><span>إجمالي حقوق الملكية</span><span>${m(307400)}</span></div></div>`};
+function stTab(btn,k){btn.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');$('stBox').innerHTML=ST[k]();trNode($('stBox'));}
+
+S.periods=()=>head('الفترات المالية','أرصدة أول المدة والحسابات الختامية (الإقفال السنوي)')+`
+<div class="card"><b style="font-size:14px">السنوات المالية</b><div style="display:flex;gap:8px;margin-top:8px"><button class="gold">2026</button><button class="gold" style="background:var(--sf);border:1px solid var(--ln);color:var(--tx)">2025 · مقفلة</button></div></div>
+<div class="tabs"><button class="on">أرصدة أول المدة</button><button>الحسابات الختامية</button></div>
+<div class="card"><b>أرصدة أول المدة — 2026</b><div class="sub">تُسجَّل كقيد افتتاحي بتاريخ بداية السنة</div>
+${tbl(['الحساب','مدين','دائن'],[['1101 — الصندوق','50,000.00','—'],['1102 — البنوك','200,000.00','—'],['1105 — المخزون','80,000.00','—'],['1202 — الآلات والمعدات','150,000.00','—'],['1290 — مجمع الإهلاك','—','30,000.00'],['2101 — الموردون','—','40,000.00'],['2201 — قروض طويلة الأجل','—','100,000.00'],['3101 — رأس المال','—','300,000.00'],['3103 — الأرباح المرحّلة','—','10,000.00']])}
+<div class="ln b t"><span>الإجمالي</span><span>480,000.00 / 480,000.00</span></div><div class="ok2">✓ متوازن</div>
+<button class="gold" style="margin-top:10px" onclick="alertMsg()">حفظ أرصدة أول المدة</button></div>
+<div class="card"><b>معاينة قيد الإقفال الختامي</b><div class="kp" style="margin-top:8px"><div><span>صافي الإيرادات</span><b>29,500.00</b></div><div><span>صافي المصروفات</span><b>27,100.00</b></div><div><span>صافي الربح</span><b>2,400.00</b></div></div>
+${tbl(['الحساب','البيان','مدين','دائن'],[['4101','إقفال مبيعات البضاعة','10,000.00','—'],['4103','إقفال مبيعات نقاط البيع','20,000.00','—'],['4201','إقفال مردودات المبيعات','—','500.00'],['5101','إقفال مشتريات البضاعة','—','6,000.00'],['5201','إقفال الرواتب والأجور','—','12,000.00'],['3104','صافي ربح العام','—','2,400.00']])}
+<button class="gold" style="margin-top:10px" onclick="alertMsg()">تنفيذ الإقفال وترحيل النتيجة</button></div>`;
+
+S.health=()=>head('فحص سلامة البيانات','يتأكد أن المخرجات صحيحة: توازن الميزان، سلامة كل قيد، والمعادلة المحاسبية')+`
+<div style="background:#DCEFE5;color:#12603c;border-radius:12px;padding:14px;font-weight:800;margin-bottom:14px">✓ البيانات سليمة ولا توجد أخطاء محاسبية</div>
+<div class="kp"><div><span>عدد القيود</span><b>10</b></div><div><span>عدد الحسابات</span><b>63</b></div><div><span>إجمالي المدين</span><b>599,575.00</b></div><div><span>إجمالي الدائن</span><b>599,575.00</b></div></div>
+<div class="card"><b style="font-size:14px">المعادلة المحاسبية</b><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:13.5px">
+<span>الأصول <b class="mono">458,725.00</b></span><span>=</span><span>الخصوم <b class="mono">151,325.00</b></span><span>+</span><span>حقوق الملكية <b class="mono">307,400.00</b></span><span class="ok2" style="margin:0">✓ متوازنة</span></div></div>
+<div class="card"><b style="font-size:14px">ما يفحصه النظام</b><ul style="margin:8px 0 0;padding-inline-start:18px;font-size:13px;color:var(--mu);line-height:2">
+<li>توازن كل قيد على حدة (المدين = الدائن)</li><li>عدم وجود قيد بطرف واحد</li><li>عدم الترحيل على حسابات تجميعية أو محذوفة</li><li>تنبيه الأرصدة العكسية للنقدية والأصول المتداولة</li><li>صحة معادلة المركز المالي</li></ul></div>`;
+
+
+let LANG='ar';
+const TR={
+ 'لوحة التحكم':'Dashboard',
+ 'نقطة البيع':'Point of Sale',
+ 'المبيعات':'Sales',
+ 'المشتريات':'Purchases',
+ 'دليل الحسابات':'Chart of Accounts',
+ 'القيود اليومية':'Journal Entries',
+ 'ميزان المراجعة':'Trial balance',
+ 'القوائم المالية':'Financial Statements',
+ 'المنتجات':'Products',
+ 'الفروع والمستودعات':'Branches & Warehouses',
+ 'جرد المخزون':'Stock Count',
+ 'المالية':'Treasury',
+ 'التقارير':'Reports',
+ 'الفترات المالية':'Fiscal Periods',
+ 'الإقرار الربعي':'VAT Return',
+ 'الزكاة':'Zakat',
+ 'فحص سلامة البيانات':'Data Integrity',
+ 'تسجيل الخروج':'Sign out',
+ 'تسجيل الدخول':'Sign in',
+ 'للمحاسبة المالية':'Financial Accounting',
+ 'طباعة':'Print',
+ 'طباعة / تصدير PDF':'Print / Export PDF',
+ 'الإجمالي':'Total',
+ 'التاريخ':'Date',
+ 'البيان':'Description',
+ 'مدين':'Debit',
+ 'دائن':'Credit',
+ 'الحساب':'Account',
+ 'المبلغ':'Amount',
+ 'رقم':'No.',
+ 'النوع':'Type',
+ 'إجراء':'Actions',
+ 'الحالة':'Status',
+ 'الرصيد':'Balance',
+ 'الطرف':'Party',
+ 'المستند':'Document',
+ 'المصدر':'Source',
+ 'الكمية':'Quantity',
+ 'الفرع':'Branch',
+ 'المستودع':'Warehouse',
+ 'الصنف':'Item',
+ 'العميل':'Customer',
+ 'المورد':'Supplier',
+ 'الخزينة':'Treasury',
+ 'الوحدة':'Unit',
+ 'التصنيف':'Category',
+ 'الاسم':'Name',
+ 'البريد الإلكتروني':'Email',
+ 'كلمة المرور':'Password',
+ 'نسيت كلمة المرور؟':'Forgot password?',
+ 'ما عندك حساب؟':'No account?',
+ 'أنشئ حساباً':'Create account',
+ 'هذا الشهر':'This month',
+ 'الشهر الماضي':'Last month',
+ 'السنة الحالية':'This year',
+ 'تفصيلي':'Detailed',
+ 'مُعتمد':'Approved',
+ 'مسودة':'Draft',
+ 'تلقائي':'Auto',
+ 'يدوي':'Manual',
+ 'تجميعي':'Group',
+ 'منخفض':'Low',
+ 'العربية':'العربية',
+ 'جداره':'Jadara',
+ 'جداره Finance':'Jadara Finance',
+ 'المدير: محمّد العبدالله':'Manager: Mohammed Alabdullah',
+ 'منشأة العيّنة التجارية · الفرع الرئيسي':'Sample Trading Est. · Main Branch',
+ 'نظرة سريعة على وضع منشأتك المالي':'A quick view of your financial position',
+ 'مبيعات الشهر':'Monthly sales',
+ 'مشتريات الشهر':'Monthly purchases',
+ 'ضريبة المخرجات':'Output VAT',
+ 'ضريبة المدخلات':'Input VAT',
+ 'متوازن ✓':'Balanced ✓',
+ 'المبيعات والمشتريات — آخر 6 أشهر':'Sales and purchases — last 6 months',
+ 'مبيعات':'Sales',
+ 'مشتريات':'Purchases',
+ 'آخر الحركات':'Recent activity',
+ 'فاتورة مبيعات':'Sales invoice',
+ 'فاتورة مشتريات':'Purchase invoice',
+ 'سند قبض':'Receipt voucher',
+ 'سند صرف':'Payment voucher',
+ 'عرض سعر':'Quotation',
+ 'شركة الأفق التجارية':'Al-Ofoq Trading Co.',
+ 'مؤسسة النخبة':'Al-Nokhba Est.',
+ 'مكتب الرياض للهندسة':'Riyadh Engineering Office',
+ 'شركة التقنية المتقدمة':'Advanced Tech Co.',
+ 'مؤسسة الجود':'Al-Jood Est.',
+ 'شركة الأفق':'Al-Ofoq',
+ 'خمسة حسابات رئيسية، وتقدر تفتح حسابات فرعية غير محدودة تحت أي حساب':'Five main accounts with unlimited sub-accounts under any of them',
+ '+ حساب فرعي':'+ Sub-account',
+ 'الأصول':'Assets',
+ 'الخصوم':'Liabilities',
+ 'حقوق الملكية':'Equity',
+ 'الأصول المتداولة':'Current assets',
+ 'الأصول غير المتداولة':'Non-current assets',
+ 'الصندوق':'Cash on hand',
+ 'البنوك':'Banks',
+ 'العملاء (المدينون)':'Accounts receivable',
+ 'المخزون':'Inventory',
+ 'ضريبة القيمة المضافة - المدخلات':'Input VAT',
+ 'الآلات والمعدات':'Machinery and equipment',
+ 'مجمع الإهلاك':'Accumulated depreciation',
+ 'قيد مركّب بأي عدد من الأطراف — عشرين طرفاً أو أكثر':'Compound entries with unlimited lines — 20 lines or more',
+ 'بيان القيد':'Entry description',
+ 'بيان السطر':'Line description',
+ '+ سطر':'+ Line',
+ '+ 5 أسطر':'+ 5 lines',
+ 'حفظ القيد':'Save entry',
+ 'القيود المسجّلة':'Posted entries',
+ '✓ القيد متوازن':'✓ Entry is balanced',
+ 'قيد يومية':'Journal entry',
+ 'أرصدة أول المدة':'Opening balances',
+ 'قيد إقفال':'Closing entry',
+ 'قيد افتتاحي':'Opening entry',
+ 'إثبات مصروفات شهر إبريل':'Recording April expenses',
+ 'رواتب إبريل':'April salaries',
+ 'إيجار المقر':'Office rent',
+ 'فاتورة الكهرباء':'Electricity bill',
+ 'اشتراك الإنترنت':'Internet subscription',
+ 'سداد نقدي':'Cash settlement',
+ 'أرصدة أول المدة — 2026':'Opening balances — 2026',
+ 'بأعمدة رصيد أول المدة وحركة الفترة والرصيد الختامي — للمراجعة الشهرية':'With opening, period movement and closing columns — for monthly review',
+ 'رصيد أول المدة':'Opening balance',
+ 'حركة الفترة':'Period movement',
+ 'الرصيد الختامي':'Closing balance',
+ '✓ الميزان متوازن':'✓ Trial balance is balanced',
+ 'رصيد آخر المدة':'Closing balance',
+ 'الحركة':'Movement',
+ 'البند':'Item',
+ 'محسوبة مباشرة من القيود المرحّلة — أي قيد جديد ينعكس فوراً':'Derived directly from posted entries — reflected instantly',
+ 'قائمة الدخل':'Income Statement',
+ 'المركز المالي':'Balance Sheet',
+ 'التدفقات النقدية':'Cash Flow',
+ 'التغير في حقوق الملكية':'Changes in Equity',
+ 'قائمة المركز المالي':'Balance Sheet',
+ 'قائمة التدفقات النقدية (الطريقة غير المباشرة)':'Cash Flow Statement (indirect method)',
+ 'قائمة التغير في حقوق الملكية':'Statement of Changes in Equity',
+ 'المبيعات والإيرادات':'Sales and revenue',
+ 'صافي المبيعات':'Net sales',
+ 'تكلفة المبيعات':'Cost of sales',
+ 'مجمل الربح':'Gross profit',
+ 'المصروفات التشغيلية':'Operating expenses',
+ 'الربح التشغيلي':'Operating profit',
+ 'صافي الربح':'Net profit',
+ 'يُخصم: مردودات المبيعات':'Less: sales returns',
+ 'هامش صافي الربح':'Net profit margin',
+ 'الخصوم وحقوق الملكية':'Liabilities and equity',
+ 'الخصوم المتداولة':'Current liabilities',
+ 'الخصوم غير المتداولة':'Non-current liabilities',
+ 'إجمالي الأصول':'Total assets',
+ 'إجمالي الخصوم':'Total liabilities',
+ 'إجمالي حقوق الملكية':'Total equity',
+ 'إجمالي الخصوم وحقوق الملكية':'Total liabilities and equity',
+ 'نتيجة الفترة':'Period result',
+ 'الأنشطة التشغيلية':'Operating activities',
+ 'الأنشطة الاستثمارية':'Investing activities',
+ 'الأنشطة التمويلية':'Financing activities',
+ 'صافي التغير في النقدية':'Net change in cash',
+ 'النقدية أول المدة':'Cash at beginning',
+ 'النقدية آخر المدة':'Cash at end',
+ 'رأس المال':'Capital',
+ 'الاحتياطيات':'Reserves',
+ 'الأرباح المرحّلة':'Retained earnings',
+ 'الأرباح المرحلة':'Retained earnings',
+ 'المسحوبات':'Drawings',
+ 'صافي ربح الفترة':'Profit for the period',
+ 'القروض طويلة الأجل':'Long-term loans',
+ 'الاحتياطيات النظامية':'Statutory reserves',
+ 'الموردون':'Accounts payable',
+ 'أرصدة أول المدة والحسابات الختامية (الإقفال السنوي)':'Opening balances and year-end closing',
+ 'السنوات المالية':'Fiscal years',
+ 'الحسابات الختامية':'Closing entries',
+ 'تُسجَّل كقيد افتتاحي بتاريخ بداية السنة':'Posted as an opening entry dated at the start of the year',
+ 'حفظ أرصدة أول المدة':'Save opening balances',
+ 'معاينة قيد الإقفال الختامي':'Closing entry preview',
+ 'تنفيذ الإقفال وترحيل النتيجة':'Post closing and transfer result',
+ 'صافي الإيرادات':'Net revenue',
+ 'صافي المصروفات':'Net expenses',
+ 'صافي ربح العام':'Net profit for the year',
+ 'مقفلة':'Closed',
+ '2025 · مقفلة':'2025 · Closed',
+ 'إقفال مبيعات البضاعة':'Close goods sales',
+ 'إقفال مبيعات نقاط البيع':'Close POS sales',
+ 'إقفال مردودات المبيعات':'Close sales returns',
+ 'إقفال مشتريات البضاعة':'Close goods purchases',
+ 'إقفال الرواتب والأجور':'Close salaries and wages',
+ 'يتأكد أن المخرجات صحيحة: توازن الميزان، سلامة كل قيد، والمعادلة المحاسبية':'Verifies outputs: trial balance, entry integrity, and the accounting equation',
+ '✓ البيانات سليمة ولا توجد أخطاء محاسبية':'✓ Data is sound — no accounting errors',
+ 'عدد القيود':'Entries',
+ 'عدد الحسابات':'Accounts',
+ 'إجمالي المدين':'Total debit',
+ 'إجمالي الدائن':'Total credit',
+ 'المعادلة المحاسبية':'Accounting equation',
+ '✓ متوازنة':'✓ Balanced',
+ 'ما يفحصه النظام':'What the system checks',
+ 'توازن كل قيد على حدة (المدين = الدائن)':'Each entry balances (debit = credit)',
+ 'عدم وجود قيد بطرف واحد':'No single-sided entries',
+ 'عدم الترحيل على حسابات تجميعية أو محذوفة':'No postings to group or deleted accounts',
+ 'تنبيه الأرصدة العكسية للنقدية والأصول المتداولة':'Alerts on negative cash and current asset balances',
+ 'صحة معادلة المركز المالي':'Balance sheet equation integrity',
+ 'عروض أسعار، أوامر بيع، فواتير، ومرتجعات — تُحفظ مسودة ثم تُعتمد':'Quotations, sales orders, invoices and returns — saved as draft then approved',
+ 'طلبات شراء، أوامر شراء، فواتير، ومرتجعات':'Purchase requests, orders, invoices and returns',
+ 'أمر بيع':'Sales order',
+ 'مرتجع مبيعات':'Sales return',
+ 'طلب شراء':'Purchase request',
+ 'أمر شراء':'Purchase order',
+ 'مرتجع مشتريات':'Purchase return',
+ 'اسم العميل':'Customer name',
+ 'اسم المورد':'Supplier name',
+ 'حفظ كمسودة':'Save as draft',
+ 'اعتماد':'Approve',
+ 'المستودع الرئيسي':'Main warehouse',
+ 'مستودع الرياض':'Riyadh warehouse',
+ 'مستودع جدة':'Jeddah warehouse',
+ 'الفرع الرئيسي':'Main branch',
+ 'فرع جدة':'Jeddah branch',
+ 'الفرع الرئيسي (رئيسي)':'Main branch (primary)',
+ 'الفروع':'Branches',
+ 'المستودعات':'Warehouses',
+ 'بيع سريع: يخصم المخزون ويرحّل الفاتورة والقيد ويسجّل التحصيل بضغطة واحدة':'Quick sale: deducts stock, posts the invoice and entry, and records collection in one tap',
+ 'سلة البيع — عميل نقدي':'Cart — cash customer',
+ 'إتمام البيع':'Complete sale',
+ 'اضغط على منتج لإضافته':'Tap a product to add it',
+ 'الأساس':'Subtotal',
+ 'الضريبة':'VAT',
+ 'الأصناف والتصنيفات ووحدات القياس':'Items, categories and units of measure',
+ 'رمز الصنف SKU':'SKU',
+ 'اسم الصنف':'Item name',
+ 'سعر البيع':'Selling price',
+ 'إضافة منتج':'Add product',
+ 'كرسي مكتبي':'Office chair',
+ 'طاولة اجتماعات':'Meeting table',
+ 'شاشة 27 بوصة':'27-inch monitor',
+ 'لوحة مفاتيح':'Keyboard',
+ 'ماوس لاسلكي':'Wireless mouse',
+ 'طابعة ليزر':'Laser printer',
+ 'أثاث':'Furniture',
+ 'إلكترونيات':'Electronics',
+ 'قطعة':'Piece',
+ 'كرتون':'Carton',
+ 'كل مستودع يتبع فرعاً — أساس الفروع المتعددة':'Each warehouse belongs to a branch — the basis of multi-branch',
+ 'افتح جرداً، سجّل الكميات الفعلية، واعتمده — الفروقات تُسوّى تلقائياً':'Open a count, record actual quantities and approve — variances are adjusted automatically',
+ 'بالنظام':'System qty',
+ 'الفعلي':'Actual qty',
+ 'الفرق':'Variance',
+ 'اعتماد الجرد وتسوية الفروقات':'Approve count and adjust variances',
+ 'الخزائن والحسابات البنكية وسندات القبض والصرف':'Cash boxes, bank accounts, receipt and payment vouchers',
+ 'الصندوق الرئيسي':'Main cash box',
+ 'حساب بنك STC':'STC bank account',
+ 'حفظ السند وترحيل القيد':'Save voucher and post entry',
+ 'من / إلى':'From / To',
+ 'قبض':'Receipt',
+ 'صرف':'Payment',
+ 'مبيعات، مشتريات، مخزون، وكشف حساب':'Sales, purchases, inventory and account statements',
+ 'المبيعات حسب العميل':'Sales by customer',
+ 'عدد الفواتير':'Invoices',
+ 'كشف حساب':'Account statement',
+ 'أصناف تحت حد إعادة الطلب':'Items below reorder point',
+ 'الرصيد الكلي':'Total quantity',
+ 'طبيعي':'Normal',
+ 'مستند قابل للطباعة يطابق شكل إقرار ضريبة القيمة المضافة':'A printable document matching the VAT return form',
+ 'جداره Finance — إقرار ضريبة القيمة المضافة':'Jadara Finance — VAT Return',
+ 'السنة 2026 — الربع الثالث':'Year 2026 — Q3',
+ 'مبيعات (المخرجات)':'Sales (output)',
+ 'مشتريات (المدخلات)':'Purchases (input)',
+ 'الضريبة 15٪':'VAT 15%',
+ 'صافي الضريبة المستحقة للهيئة: 18,465 ر.س':'Net VAT due to ZATCA: SAR 18,465',
+ 'الزكاة — الوعاء الزكوي':'Zakat — Zakat base',
+ 'بطريقة مصادر الأموال، محسوبة من دليل الحسابات':'Sources-of-funds method, derived from the chart of accounts',
+ 'الوعاء الزكوي':'Zakat base',
+ 'يُخصم: صافي الأصول الثابتة':'Less: net fixed assets',
+ 'الزكاة (هجرية 2.5٪)':'Zakat (Hijri 2.5%)',
+ 'الزكاة (ميلادية 2.578٪)':'Zakat (Gregorian 2.578%)',
+ 'ر.س':'SAR',
+ 'معاينة بيانات تجريبية — اضغط «تسجيل الدخول» لدخول حساب منشأة العيّنة':'Demo data — click "Sign in" to enter the sample company',
+};
+const T=x=>LANG==='en'?(TR[x]||x):x;
+// ترجمة نصوص DOM: مطابقة كاملة أولاً، ثم استبدال العبارات الجزئية (مثل «ر.س» داخل مبلغ)
+const PARTIAL=[['ر.س','SAR'],['يوم','days'],['٪',' %']];
+function trText(v){
+ const k=v.trim(); if(!k)return v;
+ if(TR[k])return v.replace(k,TR[k]);
+ let out=v, changed=false;
+ for(const [a,b] of Object.entries(TR)){ if(a.length>6 && out.includes(a)){ out=out.split(a).join(b); changed=true; } }
+ for(const [a,b] of PARTIAL){ if(out.includes(a)){ out=out.split(a).join(b); changed=true; } }
+ return changed?out:v;
+}
+function trNode(root){ if(LANG!=='en')return;
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ const hits=[]; while(w.nextNode())hits.push(w.currentNode);
+ hits.forEach(n=>{ const nv=trText(n.nodeValue); if(nv!==n.nodeValue)n.nodeValue=nv; });
+ root.querySelectorAll('[placeholder]').forEach(e=>{const tr=TR[e.getAttribute('placeholder').trim()]; if(tr)e.setAttribute('placeholder',tr);});
+}
+function toggleLang(){LANG=LANG==='ar'?'en':'ar';
+ document.documentElement.lang=LANG;document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
+ $('lang').textContent=LANG==='ar'?'English':'العربية';
+ document.querySelector('.br small').textContent=T('للمحاسبة المالية');
+ document.querySelector('.out').textContent=T('تسجيل الخروج');
+ document.querySelectorAll('.top .chip').forEach(c=>{const tr=TR[c.textContent.trim()];if(tr)c.textContent=tr;});
+ renderNav();go(CUR);}
+let CUR='dash';
+function renderNav(){$('nav').innerHTML=NAV.map(n=>`<button data-k="${n[0]}" onclick="go('${n[0]}')">${T(n[1])}</button>`).join('');}
+
+const NAV=[['dash','لوحة التحكم'],['pos','نقطة البيع'],['sales','المبيعات'],['purchases','المشتريات'],['accounts','دليل الحسابات'],['journal','القيود اليومية'],['trial','ميزان المراجعة'],['statements','القوائم المالية'],['products','المنتجات'],['warehouses','الفروع والمستودعات'],['stock','جرد المخزون'],['finance','المالية'],['reports','التقارير'],['periods','الفترات المالية'],['vat','الإقرار الربعي'],['zakat','الزكاة'],['health','فحص سلامة البيانات']];
+function go(k){CUR=k;document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));$('view').innerHTML=S[k]();trNode($('view'));if(k==='pos')drawCart();if(k==='statements'){$('stBox').innerHTML=ST.inc();trNode($('stBox'));}window.scrollTo(0,0)}
+renderNav();
+function enter(){$('login').style.display='none';$('app').style.display='flex';go('dash')}
+function leave(){$('app').style.display='none';$('login').style.display='flex'}
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block'}
+function toast2(){alert('هذه معاينة بيانات تجريبية — في النظام الفعلي يُنفَّذ الإجراء ويُرحَّل القيد تلقائياً')}
+function add(i){cart[i]=(cart[i]||0)+1;drawCart()}
+function drawCart(){const el=$('cart');if(!el)return;const rows=Object.keys(cart);const sub=rows.reduce((s,i)=>s+P[i][1]*cart[i],0),v=sub*.15;
+el.innerHTML=`<b style="font-size:14px">سلة البيع — عميل نقدي</b>${rows.length?rows.map(i=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--ln);font-size:13px"><span>${P[i][0]}</span><span>× ${cart[i]}</span></div>`).join(''):'<p class="sub">اضغط على منتج لإضافته</p>'}<p class="sub" style="margin:10px 0 2px">الأساس: ${sub.toLocaleString('en-US')} — الضريبة: ${v.toLocaleString('en-US')}</p><p style="font-weight:800;font-size:17px;margin:0 0 10px">الإجمالي: ${(sub+v).toLocaleString('en-US')} ر.س</p><button class="btn" onclick="${rows.length?"cart={};drawCart();alert('تم البيع ✓ الفاتورة والقيد وسند القبض اتسجلوا تلقائياً')":"void 0"}">إتمام البيع</button>`;trNode(el)}
+</script>
+</body>
+</html>

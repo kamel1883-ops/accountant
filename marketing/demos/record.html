@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>record</title>
+<link rel="stylesheet" href="demo-engine.css">
+<style>html,body{margin:0;background:#0f0d2e}#stage{width:100vw}</style></head>
+<body><div id="stage"></div>
+<script src="demo-engine.js"></script>
+<script>
+const key=new URLSearchParams(location.search).get('v')||'invoice';
+const p=JadaraDemos.mount(document.getElementById('stage'),key,{loop:false});
+document.getElementById('stage').addEventListener('demodone',()=>{
+  const f=document.createElement('div');f.style.cssText='position:fixed;inset:0;background:#00ffff;z-index:99999';document.body.appendChild(f);
+});
+window.startDemo=()=>{
+  window.__demoDone=false;
+  const f=document.createElement('div');f.style.cssText='position:fixed;inset:0;background:#ff00ff;z-index:99999';document.body.appendChild(f);
+  setTimeout(()=>{f.remove();p.start();},220);   // وميض تزامن يُقصّ لاحقاً من الفيديو
+};
+</script></body></html>

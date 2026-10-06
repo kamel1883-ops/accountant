@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>جداره Finance — خصم ١٠٪</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #070910; }
+  body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: #F6F1E6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .poster {
+    position: relative;
+    width: 1080px; height: 1920px;
+    overflow: hidden;
+    background: #070910;
+    border: 10px solid #070910;
+    outline: 2px solid #C6A15B;
+    outline-offset: -22px;
+  }
+  .fill {
+    position: absolute; inset: -40px;
+    width: calc(100% + 80px); height: calc(100% + 80px);
+    object-fit: cover; object-position: center 18%;
+    filter: blur(8px) brightness(.72) saturate(1.2);
+  }
+  .bg {
+    position: absolute; top: 0; left: 0; width: 1080px; height: auto; display: block;
+  }
+  .veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(7,9,16,.18) 0%,
+      rgba(7,9,16,0) 18%,
+      rgba(7,9,16,.28) 38%,
+      rgba(7,9,16,.62) 52%,
+      rgba(7,9,16,.5) 100%);
+  }
+  .content {
+    position: relative; z-index: 1;
+    height: 100%;
+    padding: 430px 48px 36px;
+    display: flex; flex-direction: column;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 16px; align-self: flex-start;
+    background: rgba(7,9,16,.82); border-radius: 18px; padding: 10px 16px;
+  }
+  .crown {
+    width: 92px; height: 92px; border-radius: 20px; background: #151340;
+    border: 2px solid #C6A15B; display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .crown svg { width: 54px; height: 54px; }
+  .brand b { display: block; font-size: 40px; line-height: 1; }
+  .brand small { display: block; margin-top: 6px; color: #E7D6AD; font-size: 20px; }
+  .offer {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-top: 16px;
+    background: rgba(7,9,16,.86); border-radius: 18px; padding: 16px 18px;
+  }
+  h1 { font-size: 78px; line-height: .9; font-weight: 800; }
+  h1 .pct { color: #C6A15B; }
+  .lead { margin-top: 8px; font-size: 24px; font-weight: 700; color: #fff; }
+  .code {
+    background: #F6F1E6; color: #100e28; border-radius: 18px;
+    padding: 12px 18px 14px; text-align: center; min-width: 250px;
+  }
+  .code small { display: block; font-size: 16px; color: #6C6248; }
+  .code b { display: block; font-size: 52px; letter-spacing: .02em; line-height: 1; margin-top: 2px; }
+  .plans { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .plan { background: rgba(8,10,22,.92); border: 1px solid rgba(198,161,91,.7); border-radius: 16px; padding: 12px 16px; }
+  .plan h2 { font-size: 26px; }
+  .plan .was { color: #D5D0C4; font-size: 22px; text-decoration: line-through; }
+  .plan .now { font-size: 36px; font-weight: 800; color: #C6A15B; }
+  .plan .now span { font-size: 18px; font-weight: 600; color: #E7D6AD; }
+  .sec-title {
+    display: block; width: 100%; margin-top: 16px; font-size: 30px; font-weight: 800; color: #F3E6C4;
+  }
+  .grid { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .grid span {
+    background: rgba(8,10,22,.9); border-radius: 8px;
+    padding: 12px 8px; font-size: 21px; font-weight: 700; line-height: 1.25; text-align: center; color: #fff;
+  }
+  .feats { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .feats span {
+    background: rgba(8,10,22,.92); border: 1px solid #C6A15B; color: #F3E6C4;
+    border-radius: 999px; padding: 6px 12px; font-size: 17px; font-weight: 700;
+  }
+  .foot { margin-top: auto; padding-top: 18px; }
+  .site { background: #C6A15B; color: #100e28; border-radius: 16px; text-align: center; padding: 14px 16px; }
+  .site b { display: block; font-size: 32px; }
+  .site span { display: block; font-size: 18px; }
+  .fine { margin-top: 12px; text-align: center; }
+  .fine span.bar {
+    display: inline-block; background: rgba(7,9,16,.86); color: #fff;
+    border-radius: 999px; padding: 8px 18px; font-size: 18px; font-weight: 700;
+  }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <img class="fill" src="riyadh-night.png" alt="">
+    <img class="bg" src="riyadh-night.png" alt="">
+    <div class="veil"></div>
+    <div class="content">
+    <div class="brand">
+      <span class="crown" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/>
+          <path d="M6 20h12"/>
+        </svg>
+      </span>
+      <div><b>جداره Finance</b><small>للمحاسبة المالية</small></div>
+    </div>
+
+    <div class="offer">
+      <div>
+        <h1>خصم <span class="pct ltr">10%</span></h1>
+        <p class="lead">على الأساسية والمتقدمة. السعر بعد الخصم نهائي.</p>
+      </div>
+      <div class="code">
+        <small>كود الخصم عند التسجيل</small>
+        <b class="ltr">M10</b>
+      </div>
+    </div>
+
+    <div class="plans">
+      <article class="plan">
+        <h2>الأساسية</h2>
+        <div class="was ltr">1,350</div>
+        <div class="now"><span class="ltr">1,215</span> <span>ريال سنوياً</span></div>
+      </article>
+      <article class="plan">
+        <h2>المتقدمة</h2>
+        <div class="was ltr">2,000</div>
+        <div class="now"><span class="ltr">1,800</span> <span>ريال سنوياً</span></div>
+      </article>
+    </div>
+
+    <p class="sec-title">أقسام النظام</p>
+    <div class="grid">
+      <span>لوحة التحكم</span>
+      <span>نقطة البيع</span>
+      <span>المبيعات</span>
+      <span>المشتريات</span>
+      <span>دليل الحسابات</span>
+      <span>القيود اليومية</span>
+      <span>ميزان المراجعة</span>
+      <span>القوائم المالية</span>
+      <span>المنتجات</span>
+      <span>الفروع والمستودعات</span>
+      <span>جرد المخزون</span>
+      <span>المالية</span>
+      <span>التقارير</span>
+      <span>الفترات المالية</span>
+      <span>الإقرار الربعي</span>
+      <span>الزكاة</span>
+      <span>الفوترة الإلكترونية</span>
+      <span>المستخدمون والصلاحيات</span>
+      <span>فحص سلامة البيانات</span>
+      <span>كودات الخصم</span>
+      <span>تذكرة دعم فني</span>
+    </div>
+    <div class="feats">
+      <span>عربي وإنجليزي</span>
+      <span>ضريبة ١٥٪ ورمز QR</span>
+      <span>قيود تلقائية</span>
+      <span>أربع قوائم مالية</span>
+      <span>من المتصفح</span>
+    </div>
+
+    <div class="foot">
+      <div class="site">
+        <b class="ltr">jadara-finance.com</b>
+        <span>سجّل الآن واكتب الكود</span>
+      </div>
+      <p class="fine"><span class="bar"><span class="ltr">0594700782</span> · <span class="ltr">info@jadara-finance.com</span></span></p>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

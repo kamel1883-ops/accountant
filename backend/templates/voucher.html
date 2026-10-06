@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{dir}}"><head><meta charset="utf-8"><title>{{docTitle}}</title>
+<style>
+@page{size:A4;margin:12mm}*{box-sizing:border-box}
+body{margin:0;color:#1E1B33;font-size:12.5px;line-height:1.7;font-family:'Tajawal','Noto Sans Arabic','DejaVu Sans',sans-serif}
+.muted{color:#6C6A82}.ltr{direction:ltr;unicode-bidi:embed;display:inline-block;font-family:'DejaVu Sans Mono',monospace}
+table{width:100%;border-collapse:collapse}
+.head td{vertical-align:middle;padding-bottom:10px}.head .t{font-size:20px;font-weight:700}.head .meta{text-align:left;font-size:12px}
+.brand{border-bottom:2.5px solid #1E1B4B;padding-bottom:12px;margin-bottom:16px}
+.logo{width:44px;height:44px;border-radius:11px;background:#1E1B4B;border:1.5px solid #C6A15B;text-align:center;padding-top:8px}
+.brand h1{margin:0;font-size:18px}
+.info{background:#FBFAF6;border:1px solid #E3DFD3;border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.info td{padding:3px 0;width:33%}
+.lines{margin-top:6px}
+.lines th{background:#1E1B4B;color:#fff;font-size:12px;padding:8px 6px;font-weight:600}
+.lines td{padding:7px 6px;border-bottom:1px solid #E3DFD3;font-size:12px}
+.lines tfoot td{background:#F3E9D2;font-weight:700;border-top:2px solid #1E1B4B}
+.num{text-align:left;direction:ltr;font-family:'DejaVu Sans Mono',monospace}
+.sign{margin-top:26px}.sign td{width:33%;text-align:center;padding-top:6px}
+.sline{border-top:1px solid #1E1B4B;margin:34px 12px 4px}
+.note{margin-top:14px;font-size:11.5px;color:#6C6A82}
+</style></head><body>
+<table class="head"><tr>
+  <td class="t">{{docTitle}}</td>
+  <td class="meta">{{lNo}}: <b class="ltr">{{number}}</b><br>{{lDate}}: <span class="ltr">{{date}}</span></td>
+</tr></table>
+<table class="brand"><tr>
+  <td style="width:56px"><div class="logo">{{{logo}}}</div></td>
+  <td style="width:1%;white-space:nowrap"><h1>{{brand}}</h1></td>
+  {{{companySide}}}
+</tr></table>
+
+<table class="info"><tr>
+  <td><span class="muted">{{lDesc}}:</span> <b>{{descAr}}</b></td>
+  <td><span class="muted">{{lKind}}:</span> <b>{{kindLabel}}</b></td>
+  <td><span class="muted">{{lSource}}:</span> <b>{{sourceLabel}}</b></td>
+</tr></table>
+
+<table class="lines">
+  <thead><tr><th style="width:9%">{{lSeq}}</th><th style="width:13%">{{lAccCode}}</th><th>{{lAccName}}</th><th style="width:22%">{{lLineDesc}}</th><th style="width:14%">{{lDebit}}</th><th style="width:14%">{{lCredit}}</th></tr></thead>
+  <tbody>{{{rowsHtml}}}</tbody>
+  <tfoot><tr><td colspan="4">{{lTotal}}</td><td class="num">{{totalDebit}}</td><td class="num">{{totalCredit}}</td></tr></tfoot>
+</table>
+<p class="note">{{lDiff}}: <b>{{difference}}</b> — {{balanceNote}}</p>
+
+<table class="sign"><tr>
+  <td><div class="sline"></div>{{lAccountant}}</td>
+  <td><div class="sline"></div>{{lReviewer}}</td>
+  <td><div class="sline"></div>{{lCfo}}</td>
+</tr></table>
+</body></html>

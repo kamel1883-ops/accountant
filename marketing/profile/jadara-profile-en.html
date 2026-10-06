@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<title>Jadara Finance</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: #1E1B33;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .cover {
+    width: 210mm; height: 297mm; page-break-after: always;
+    background: #14122E; color: #F6F1E6;
+    padding: 22mm 18mm 16mm;
+    display: flex; flex-direction: column;
+  }
+  .cover-top { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 78px; height: 78px; border-radius: 18px; flex: none;
+    background: #151340; border: 2px solid #C6A15B;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo svg { width: 46px; height: 46px; }
+  .brand { font-size: 28px; font-weight: 700; letter-spacing: 0; }
+  .subbrand { color: #E7D6AD; font-size: 16px; margin-top: 2px; }
+  .kicker { margin: 28mm 0 8px; color: #C6A15B; letter-spacing: .08em; font-size: 13px; }
+  h1 { margin: 0; font-size: 40px; line-height: 1.25; font-weight: 700; max-width: 16ch; }
+  .lead { font-size: 16px; line-height: 1.7; color: #E7E2D6; max-width: 38em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chips span { border: 1px solid #C6A15B; color: #E7D6AD; border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+  .stats { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px 0 18px; }
+  .stats div { border-top: 1px solid rgba(198,161,91,.55); padding-top: 8px; }
+  .stats b { display: block; color: #C6A15B; font-size: 22px; }
+  .stats span { display: block; color: #E7E2D6; font-size: 12px; line-height: 1.35; margin-top: 2px; }
+  .cover-bottom { border-top: 1px solid rgba(198,161,91,.45); padding-top: 14px; }
+  .cover-bottom p { margin: 4px 0; font-size: 13.5px; color: #E7E2D6; }
+  .legal { color: #C6A15B !important; }
+  .sheet {
+    width: 210mm; height: 297mm; page-break-after: always;
+    background: #F7F4EE; position: relative;
+  }
+  .sheet-body { padding: 14mm 14mm 16mm; }
+  h2 { margin: 0 0 8px; font-size: 26px; line-height: 1.25; color: #14122E; }
+  h3 { margin: 0; font-size: 15px; color: #14122E; }
+  .eyebrow { margin: 0 0 4px; color: #8A6A32; font-size: 12px; font-weight: 700; }
+  .prose, .note { margin: 0 0 12px; font-size: 13px; line-height: 1.65; color: #3C3954; }
+  .pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .pillar { background: #fff; border-top: 3px solid #C6A15B; border-radius: 10px; padding: 10px 12px; }
+  .pillar p, .points { font-size: 12.5px; line-height: 1.6; color: #3C3954; margin: 6px 0 0; }
+  .points { margin-top: 12px; padding-inline-start: 18px; }
+  .points li { margin: 4px 0; }
+  .shots { display: flex; flex-direction: column; gap: 8px; }
+  .shot { margin: 0; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #E4DCC8; }
+  .shot img { width: 100%; height: 68mm; object-fit: contain; object-position: center; display: block; background: #EFEAE0; }
+  .shot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .shot-row .shot img { height: 52mm; }
+  .aside { margin: 8px 0 0; background: #14122E; color: #F6F1E6; border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.55; }
+  figcaption { padding: 7px 10px 9px; }
+  figcaption b { display: block; font-size: 13px; }
+  figcaption span { display: block; font-size: 11.5px; line-height: 1.45; color: #5C5870; margin-top: 2px; }
+  .group { margin: 0 0 8px; }
+  .group h3 { background: #14122E; color: #F6F1E6; display: inline-block; padding: 3px 10px; border-radius: 7px; font-size: 13px; }
+  .group ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+  .group li { background: #fff; border-radius: 8px; padding: 6px 10px; display: grid; grid-template-columns: 46mm 1fr; gap: 8px; align-items: start; }
+  .group li b { font-size: 12px; }
+  .group li span { font-size: 11.5px; line-height: 1.45; color: #3C3954; }
+  .whys { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .why { background: #fff; border-radius: 10px; padding: 8px 10px; border-inline-start: 3px solid #C6A15B; }
+  .why b { display: block; font-size: 13px; }
+  .why span { display: block; font-size: 11.5px; line-height: 1.45; color: #3C3954; margin-top: 2px; }
+  .clients { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .client { margin: 0; background: #fff; border-radius: 10px; padding: 8px; text-align: center; border: 1px solid #E4DCC8; }
+  .client img { height: 22mm; width: 100%; object-fit: contain; }
+  .client figcaption { font-size: 11px; line-height: 1.35; color: #1E1B33; padding: 6px 2px 2px; }
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .plan { background: #fff; border-radius: 12px; padding: 10px 12px; border: 1px solid #E4DCC8; }
+  .plan.featured { background: #14122E; color: #F6F1E6; border-color: #14122E; }
+  .plan .tag { margin: 4px 0 8px; font-size: 12px; color: #6C6A82; }
+  .plan.featured .tag { color: #E7D6AD; }
+  .price { margin: 0 0 8px; }
+  .price b { font-size: 28px; color: #14122E; }
+  .plan.featured .price b { color: #C6A15B; }
+  .price span { display: block; font-size: 12px; color: #6C6A82; }
+  .plan.featured .price span { color: #E7D6AD; }
+  .plan ul { margin: 0; padding-inline-start: 16px; }
+  .plan li { font-size: 11.5px; line-height: 1.4; margin: 3px 0; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .step { display: flex; gap: 8px; background: #fff; border-radius: 10px; padding: 8px 10px; }
+  .step > span { width: 22px; height: 22px; border-radius: 50%; background: #C6A15B; color: #14122E; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; font-size: 12px; }
+  .step b { font-size: 13px; }
+  .step p { margin: 2px 0 0; font-size: 11.5px; line-height: 1.4; color: #3C3954; }
+  .block-title { margin: 12px 0 6px; font-size: 15px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .facts div { background: #fff; border-radius: 8px; padding: 6px 10px; }
+  .facts small { display: block; color: #8A6A32; font-size: 10.5px; }
+  .facts b { font-size: 12.5px; font-weight: 650; }
+  .vision { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .vision img { height: 16mm; width: auto; }
+  .vision p { margin: 0; font-size: 12.5px; color: #3C3954; }
+  .fine { margin: 8px 0 0; font-size: 10px; color: #6C6A82; }
+  .run {
+    position: absolute; left: 14mm; right: 14mm; bottom: 7mm;
+    display: flex; justify-content: space-between; gap: 8px;
+    font-size: 10px; color: #6C6A82; border-top: 1px solid #E4DCC8; padding-top: 4px;
+  }
+</style>
+</head>
+<body>
+<section class="cover">
+    <div class="cover-top">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#C6A15B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 4 5-7 5 7 4-4-2 10H5L3 8z"/><path d="M6 20h12"/></svg></span>
+      <div>
+        <div class="brand">Jadara Finance</div>
+        <div class="subbrand">Financial accounting</div>
+      </div>
+    </div>
+    <p class="kicker">Company profile · 2026</p>
+    <h1>From the invoice to the financial statements</h1>
+    <p class="lead">A Saudi cloud system for sales, purchases, inventory, journals, and reports, in Arabic and English, in one place.</p>
+    <div class="chips"><span>Invoices and 15% VAT</span><span>Journals and statements</span><span>Inventory and point of sale</span></div>
+    <div class="stats"><div><b>15%</b><span>VAT calculated automatically</span></div><div><b>12+</b><span>sections in one system</span></div><div><b>2</b><span>Arabic and English</span></div><div><b>24h</b><span>to activate after transfer</span></div></div>
+    <div class="cover-bottom">
+      <p>14-day trial · activation within 24 hours of receiving the transfer</p>
+      <p class="ltr">www.jadara-finance.com · info@jadara-finance.com · 0594700782</p>
+      <p class="legal">Mada Al Injaz Al Hadith Co. · شركة مدى الإنجاز الحديث</p>
+    </div>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Who we are</p>
+    <h2>One system for the owner and the accountant</h2>
+    <p class="prose">Jadara Finance keeps the daily accounting work in one place. A sale or a purchase posts a balanced entry, and the same data prints in Arabic or English. It runs in the browser on a phone or a computer, and each company’s data stays separate.</p>
+    <div class="pillars">
+    <article class="pillar"><h3>Vision</h3><p>A Saudi business runs its invoices, accounts, and financial statements from Jadara Finance, in one place built for VAT, zakat, and e-invoicing in the Kingdom.</p></article>
+    <article class="pillar"><h3>Mission</h3><p>We simplify the daily financial work. Sales, purchases, and inventory post their own entries. Reports are in Arabic and English. Each company’s data stays separate from the others.</p></article>
+    <article class="pillar"><h3>Goals</h3><p>Help the business issue invoices with a QR code, follow VAT and zakat, and produce a trial balance and financial statements, without a second program.</p></article></div>
+    <ul class="points"><li>A tax invoice with a QR code. VAT is calculated and posted without a manual entry.</li><li>The general ledger, trial balance, and four financial statements come from the same journals.</li><li>Inventory, point of sale, and more than one branch when the business grows.</li><li>Activation within 24 hours of receiving the bank transfer.</li></ul>
+    <div class="whys">
+    <article class="why"><b>Separate data</b><span>One company’s accounts never mix with another’s. Roles are set inside the company.</span></article>
+    <article class="why"><b>Arabic and English</b><span>The screen, chart of accounts, reports, and documents use both languages.</span></article>
+    <article class="why"><b>Automatic entries</b><span>Invoices, vouchers, returns, and stock counts post without a manual journal.</span></article>
+    <article class="why"><b>Daily backup</b><span>The hosting provider takes a daily backup of the whole server, including accounts, entries, invoices, and inventory.</span></article>
+    <article class="why"><b>Room to grow</b><span>Start on Basic and move to Advanced at any time. Only the remaining term is charged.</span></article>
+    <article class="why"><b>In the browser</b><span>Nothing to install. It runs on a computer and a phone.</span></article></div></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 2 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Inside the system</p>
+    <h2>The screens people use every day</h2>
+    <p class="note">Sample figures. The layout is the live product.</p>
+    <div class="shots">
+      <div class="shot wide">
+    <figure class="shot">
+      <img src="../film-src/dash.png" alt="">
+      <figcaption><b>Dashboard</b><span>Colored tiles for sales, purchases, profit, cash, and customers sit above the charts: a mix, then sales, cost, and profit columns.</span></figcaption>
+    </figure></div>
+      <div class="shot-row">
+        
+    <figure class="shot">
+      <img src="../film-src/sales.png" alt="">
+      <figcaption><b>Sales list</b><span>Sales invoices with status and amount. VAT is calculated when the invoice is posted.</span></figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="../film-src/trial.png" alt="">
+      <figcaption><b>Trial balance</b><span>Opening, movement, and closing balance. An entry posts only when debits equal credits.</span></figcaption>
+    </figure>
+      </div>
+    </div></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 3 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Sections</p>
+    <h2>Every section posts to the ledger</h2>
+    <p class="note">A sale, a purchase, or a payment updates the journals, inventory, and reports. The list below is the menu the company admin sees.</p>
+    
+    <section class="group">
+      <h3>Daily work</h3>
+      <ul><li><b>Dashboard</b><span>Colored tiles for sales, purchases, profit, cash, and customers, with a mix chart and columns.</span></li><li><b>Sales</b><span>Quotations, sales orders, tax invoices, and returns.</span></li><li><b>Purchases</b><span>Purchase invoices. Requests, orders, and returns are on the Advanced plan.</span></li><li><b>Point of sale</b><span>A till that reduces stock, posts the entry, and records the collection. Advanced plan.</span></li><li><b>Treasury</b><span>Cash boxes, bank accounts, receipts, and payments.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>Accounting</h3>
+      <ul><li><b>Chart of accounts</b><span>A bilingual Saudi chart that can grow.</span></li><li><b>Journal entries</b><span>Balanced compound entries, with as many lines as needed.</span></li><li><b>Trial balance</b><span>Opening, movement, and closing balance.</span></li><li><b>Financial statements</b><span>Income, financial position, cash flows, and changes in equity.</span></li><li><b>Fiscal periods</b><span>Years, opening balances, and a closing entry. A closed period accepts no new posting.</span></li><li><b>Data integrity</b><span>Confirms the journals balance before the reports are relied on.</span></li></ul>
+    </section>
+    <p class="aside">Basic covers accounting, invoices, and treasury. Advanced adds inventory, point of sale, branches, the VAT return, and zakat.</p></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 4 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Sections</p>
+    <h2>Every section posts to the ledger</h2>
+    
+    <section class="group">
+      <h3>Inventory and branches</h3>
+      <ul><li><b>Products</b><span>Items, categories, and units of measure. Advanced plan.</span></li><li><b>Branches and warehouses</b><span>More than one branch and warehouse, with transfers. Advanced plan.</span></li><li><b>Stock count</b><span>A physical count that posts the difference. Advanced plan.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>VAT, zakat, and e-invoicing</h3>
+      <ul><li><b>Quarterly VAT return</b><span>Output and input VAT in a printable return. Advanced plan.</span></li><li><b>Zakat</b><span>Zakat base using the sources-of-funds method. Advanced plan.</span></li><li><b>E-invoicing</b><span>Tax and simplified invoices, credit and debit notes, and a QR code in TLV encoding. The technical integration was tested in the developer environment. Production linking is done for each company with its own data and authorization on the Fatoora platform. A subscription alone is not an accreditation.</span></li></ul>
+    </section>
+    
+    <section class="group">
+      <h3>Administration and support</h3>
+      <ul><li><b>Users and roles</b><span>One user on Basic, up to five on Advanced, with roles set by the company admin.</span></li><li><b>Discount codes</b><span>A discount on the sales invoice before VAT.</span></li><li><b>Support ticket</b><span>Opened inside the system. Jadara looks at the issue, works on it, and reports the result.</span></li><li><b>Reports</b><span>Sales, purchases, customers, suppliers, inventory, and accounting. Printed in Arabic or English.</span></li><li><b>Print layout</b><span>The company logo, name, and unified number sit at the top left. Jadara sits at the top right.</span></li></ul>
+    </section></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 5 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Clients</p>
+    <h2>Businesses running on Jadara</h2>
+    <p class="note">Contracting, tailoring, retail, and services.</p>
+    <div class="clients">
+    <figure class="client">
+      <img src="../clients/business-code.png" alt="">
+      <figcaption>Business Code Contracting</figcaption>
+    </figure>
+    <figure class="client">
+      <img src="../clients/darz.png" alt="">
+      <figcaption>Darz Tailoring</figcaption>
+    </figure>
+    <figure class="client">
+      <img src="../clients/al-moied.png" alt="">
+      <figcaption>Al Moied</figcaption>
+    </figure></div>
+    <p class="eyebrow" style="margin-top:14px">Plans</p>
+    <h2>A yearly subscription. The price shown is final.</h2>
+    <p class="note">A free 14-day trial. The amount is not subject to VAT. Moving from Basic to Advanced is charged only for the remaining term.</p>
+    <div class="plans">
+    <article class="plan">
+      <h3>Basic</h3>
+      <p class="tag">Small businesses and new offices</p>
+      <p class="price"><b>1,350</b><span>SAR / year</span></p>
+      <ul><li>Bilingual chart of accounts and journal entries</li><li>General ledger and trial balance</li><li>Sales and purchase invoices with 15% VAT</li><li>Quotations, sales orders, and returns</li><li>Cash, banks, receipts, and payments</li><li>Sales, purchase, and account reports</li><li>One user, and support by email</li></ul>
+    </article>
+    <article class="plan featured">
+      <h3>Advanced</h3>
+      <p class="tag">Growing businesses and accounting offices</p>
+      <p class="price"><b>2,000</b><span>SAR / year</span></p>
+      <ul><li>Everything in Basic</li><li>Products, warehouses, and stock counts</li><li>Point of sale and more than one branch</li><li>Purchase requests, orders, and purchase returns</li><li>A printable quarterly VAT return</li><li>Zakat base calculation</li><li>Up to 5 users and roles, with priority support by email and phone</li></ul>
+    </article></div></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 6 / 7</span>
+    </footer>
+  </section>
+<section class="sheet">
+    <div class="sheet-body">
+    <p class="eyebrow">Subscribe</p>
+    <h2>Four steps, then you start</h2>
+    <div class="steps">
+    <article class="step"><span>1</span><div><b>Create the account</b><p>Company name, unified number, mobile, email, and activity.</p></div></article>
+    <article class="step"><span>2</span><div><b>The quotation arrives</b><p>A PDF by email, with the transfer details and the IBAN certificate.</p></div></article>
+    <article class="step"><span>3</span><div><b>Transfer and send the receipt</b><p>To info@jadara-finance.com</p></div></article>
+    <article class="step"><span>4</span><div><b>We activate the account</b><p>We confirm the subscription, send the contract, and you sign in with your email and password.</p></div></article></div>
+    <h3 class="block-title">Bank transfer</h3>
+    <div class="facts">
+      <div><small>Bank</small><b>STC Bank</b></div>
+      <div><small>Beneficiary</small><b>شركة مدى الإنجاز الحديث</b></div>
+      <div><small>Account</small><b class="ltr">1324441685</b></div>
+      <div><small>IBAN</small><b class="ltr">SA0778000000001324441685</b></div>
+    </div>
+    <h3 class="block-title">Contact</h3>
+    <p class="note">Jadara will look at your request, work on it, and tell you the result. We are glad to serve you.</p>
+    <div class="facts">
+      <div><small>Mobile</small><b class="ltr">+966 59 470 0782</b></div>
+      <div><small>WhatsApp</small><b class="ltr">0594700782</b></div>
+      <div><small>Email</small><b class="ltr">info@jadara-finance.com</b></div>
+      <div><small>Website</small><b class="ltr">www.jadara-finance.com</b></div>
+      <div><small>Legal entity</small><b>Mada Al Injaz Al Hadith Co.</b></div>
+      <div><small>Unified number</small><b class="ltr">7054695650</b></div>
+      <div><small>General manager</small><b>Waleed Hassan Al-Qarous</b></div>
+    </div>
+    <div class="vision">
+      <img src="../vision-2030.png" alt="">
+      <p>Aligned with Saudi Vision 2030</p>
+    </div>
+    <p class="fine">© 2026 Jadara Finance — Mada Al Injaz Al Hadith Co. All rights reserved. Screens use sample data.</p></div>
+    <footer class="run">
+      <span>Jadara Finance</span>
+      <span class="ltr">www.jadara-finance.com</span>
+      <span>Page 7 / 7</span>
+    </footer>
+  </section>
+</body>
+</html>

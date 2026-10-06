@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>{{invoiceNumber}}</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #1E1B33; font-size: 13px; line-height: 1.65;
+  font-family: 'Tajawal','IBM Plex Sans Arabic','Noto Sans Arabic','DejaVu Sans',sans-serif; }
+.muted { color: #6C6A82; }
+table { width: 100%; border-collapse: collapse; }
+.brand { border-top: 1px solid #E3DFD3; border-bottom: 2.5px solid #1E1B4B; padding: 10px 0 12px; margin-bottom: 16px; }
+.brand td { vertical-align: middle; }
+.logo { width: 46px; height: 46px; border-radius: 12px; background: #1E1B4B; border: 1.5px solid #C6A15B; text-align: center; padding-top: 9px; }
+.brand h1 { margin: 0; font-size: 19px; }
+h2 { font-size: 20px; margin: 8px 0 4px; }
+.meta td { padding: 3px 0; width: 50%; }
+.box { border: 1px solid #E3DFD3; border-radius: 12px; background: #FBF8F0; padding: 14px 16px; margin: 14px 0; }
+.box td.lbl { padding: 7px 0; }
+.box td.val { text-align: left; font-weight: 700; }
+.total td { background: #1E1B4B; color: #fff; padding: 12px 14px; font-size: 15px; }
+.total td.val { color: #E7D6AD; font-size: 20px; }
+.note { border: 1px solid #C6A15B; border-radius: 12px; padding: 12px 16px; margin-top: 12px; }
+.ltr { direction: ltr; unicode-bidi: isolate; }
+</style>
+</head>
+<body>
+<table class="brand"><tr>
+  <td style="width:60px"><div class="logo">{{{logo}}}</div></td>
+  <td>
+    <h1>{{brand}}</h1>
+    <div class="muted">{{brandSubtitle}}</div>
+    <b>{{companyName}}</b> <span class="muted">— الرقم الموحّد: <span class="ltr">{{companyUnified}}</span></span>
+  </td>
+  <td style="text-align:left">
+    <div class="muted">فاتورة اشتراك</div>
+    <b class="ltr">{{invoiceNumber}}</b><br>
+    <span class="muted">التاريخ:</span> <span class="ltr">{{issueDate}}</span>
+  </td>
+</tr></table>
+
+<h2>فاتورة اشتراك سنوي</h2>
+<table class="meta">
+  <tr><td><span class="muted">إلى:</span> <b>{{clientName}}</b></td><td><span class="muted">الرقم الموحّد:</span> <b class="ltr">{{clientUnified}}</b></td></tr>
+  <tr><td><span class="muted">المسؤول:</span> <b>{{clientContact}}</b></td><td><span class="muted">الجوال:</span> <b class="ltr">{{clientPhone}}</b></td></tr>
+  <tr><td colspan="2"><span class="muted">البريد:</span> <b class="ltr">{{clientEmail}}</b></td></tr>
+</table>
+
+<div class="box">
+  <table>
+    <tr><td class="lbl">الباقة</td><td class="val">{{planName}} — {{usersText}}</td></tr>
+    <tr><td class="lbl">المدة</td><td class="val">{{durationText}}</td></tr>
+    <tr><td class="lbl">قيمة الاشتراك</td><td class="val">{{amountBefore}} ريال</td></tr>
+    {{{discountRow}}}
+    <tr class="total"><td class="lbl">المبلغ المستحق</td><td class="val">{{amountTotal}} ريال</td></tr>
+  </table>
+</div>
+
+<div class="note">
+  <b>غير خاضع للضريبة.</b>
+  قيمة اشتراك منصة {{brand}} غير خاضعة لضريبة القيمة المضافة، والمبلغ أعلاه هو المبلغ المستحق كاملاً دون أي زيادة.
+</div>
+
+<p class="muted" style="margin-top:28px">{{companyName}} — {{supportEmail}}</p>
+</body>
+</html>

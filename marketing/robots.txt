@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /owner-portal
+Disallow: /account
+Disallow: /reset-password
+
+# منع أرشفة واجهات التطبيق الداخلية
+Disallow: /api/
+
+Sitemap: https://www.jadara-finance.com/sitemap.xml

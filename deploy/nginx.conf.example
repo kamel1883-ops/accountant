@@ -1,0 +1,45 @@
+# مثال إعداد Nginx على الـ VPS — عدّل النطاق والمسارات
+server {
+    listen 80;
+    server_name your-domain.sa;
+    # بعد تثبيت الشهادة (certbot) يُضاف listen 443 ssl تلقائياً
+
+    # 1) الصفحة الرئيسية = صفحة الهبوط
+    location = / {
+        root /var/www/jadara/marketing;
+        try_files /landing-page.html =404;
+    }
+    location = /landing-i18n.js {
+        alias /var/www/jadara/marketing/landing-i18n.js;
+        add_header Cache-Control "no-cache";
+    }
+    location /clients/ { alias /var/www/jadara/marketing/clients/; add_header Cache-Control "public, max-age=86400"; }
+    location = /hero-office.mp4 { alias /var/www/jadara/marketing/hero-office.mp4; add_header Cache-Control "public, max-age=86400"; }
+    location = /hero-product.mp4 { alias /var/www/jadara/marketing/hero-product.mp4; add_header Cache-Control "public, max-age=86400"; }
+    location = /hero-product-poster.jpg { alias /var/www/jadara/marketing/hero-product-poster.jpg; add_header Cache-Control "public, max-age=86400"; }
+    location = /hero-team.png { alias /var/www/jadara/marketing/hero-team.png; add_header Cache-Control "public, max-age=86400"; }
+    location = /vision-2030.png { alias /var/www/jadara/marketing/vision-2030.png; add_header Cache-Control "public, max-age=86400"; }
+    location = /hero-office-poster.jpg { alias /var/www/jadara/marketing/hero-office-poster.jpg; add_header Cache-Control "public, max-age=86400"; }
+    location = /logo.png { alias /var/www/jadara/frontend/dist/logo.png; }
+    location = /og-image.png { alias /var/www/jadara/frontend/dist/og-image.png; }
+    location = /favicon.ico { alias /var/www/jadara/frontend/dist/favicon.ico; }
+    location = /favicon.png { alias /var/www/jadara/frontend/dist/favicon.png; }
+    location = /robots.txt { alias /var/www/jadara/marketing/robots.txt; }
+    location = /sitemap.xml { alias /var/www/jadara/marketing/sitemap.xml; }
+    location = /en { return 302 /?lang=en; }
+    location = /en/ { return 302 /?lang=en; }
+
+    # 2) الـ API (الباك إند يعمل على المنفذ 4000)
+    location /api/ {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 10m;
+    }
+
+    # 3) التطبيق (React) — يشمل: /login /register /forgot-password /reset-password /account وبوابة المالك (المسار في OWNER_PATH، الافتراضي /owner-portal، وغير مربوطة من صفحة الهبوط)
+    location / {
+        root /var/www/jadara/frontend/dist;
+        try_files $uri /index.html;
+    }
+}

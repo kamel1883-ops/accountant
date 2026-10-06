@@ -1,0 +1,14 @@
+---
+description: This workspace is the accountant repo, separate from live Jadara
+alwaysApply: true
+---
+
+# مشروع accountant — منفصل عن جدارة الحي
+
+هذا المجلد نسخة مستقلة. المستودع: `kamel1883-ops/accountant`.
+
+لا تدفع إلى `kamel1883-ops/jadara-finance`.
+لا تنشر على VPS جدارة ولا تلمس `https://www.jadara-finance.com`.
+لا تغيّر `JWT_SECRET` ولا مفاتيح زاتكا ولا `backend/.env`.
+
+أي رفع لهذا المشروع يكون إلى `origin` الخاص بـ `accountant` فقط، وبعد ما يطلب كمال ذلك.

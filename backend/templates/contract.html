@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>{{contractNumber}}</title>
+<style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #1E1B33; font-size: 11.8px; line-height: 1.7;
+  font-family: 'Tajawal','IBM Plex Sans Arabic','Noto Sans Arabic','DejaVu Sans',sans-serif; }
+.muted { color: #6C6A82; }
+table { width: 100%; border-collapse: collapse; }
+.ltr { direction: ltr; unicode-bidi: embed; display: inline-block; font-family: 'DejaVu Sans Mono','Courier New',monospace; }
+.head td { vertical-align: top; }
+.head .t { font-size: 20px; font-weight: 700; }
+.head .meta { text-align: left; }
+.brand { border-bottom: 2.5px solid #1E1B4B; padding-bottom: 10px; margin-bottom: 12px; }
+.brand td { vertical-align: middle; }
+.logo { width: 46px; height: 46px; border-radius: 12px; background: #1E1B4B; border: 1.5px solid #C6A15B; text-align: center; padding-top: 9px; }
+.brand h1 { margin: 0; font-size: 19px; }
+h2.main { text-align: center; font-size: 19px; margin: 6px 0 12px; }
+.card { border: 1px solid #E3DFD3; border-radius: 12px; background: #FBFAF6; padding: 8px 14px; margin: 8px 0; }
+.card p { margin: 4px 0; }
+.summary { border-color: #C6A15B; background: #FBF8F0; }
+.art { break-inside: avoid; margin-top: 8px; }
+.art h3 { font-size: 13.5px; margin: 0 0 2px; color: #1E1B4B; }
+.art p { margin: 0; text-align: justify; }
+.closing { margin: 10px 0 0; color: #4a4860; }
+.sign { margin-top: 8px; break-inside: avoid; }
+.sign td { vertical-align: top; width: 50%; padding: 0 6px; }
+.sign h4 { margin: 0 0 8px; border-bottom: 1.5px solid #1E1B4B; padding-bottom: 4px; font-size: 13px; }
+.box { border: 1.5px dashed #b9b7cc; border-radius: 8px; height: 62px; text-align: center; color: #9a98ad; padding-top: 20px; margin: 4px 0; }
+.stamp { width: 110px; height: auto; }
+.kv { font-size: 12px; line-height: 1.9; }
+</style>
+</head>
+<body>
+
+<table class="head"><tr>
+  <td class="t">عقد اشتراك سنوي<br><span class="muted" style="font-size:12px;font-weight:400">منصة {{brand}} للمحاسبة المالية</span></td>
+  <td class="meta">رقم العقد: <b class="ltr">{{contractNumber}}</b><br>التاريخ: {{hijriDate}} هـ</td>
+</tr></table>
+
+<table class="brand"><tr>
+  <td style="width:60px"><div class="logo">{{{logo}}}</div></td>
+  <td><h1>{{brand}}</h1><div class="muted">{{brandSubtitle}}</div><b>{{companyName}}</b> <span class="muted">— الرقم الموحّد: <span class="ltr">{{companyUnified}}</span></span></td>
+</tr></table>
+
+<h2 class="main">عقد اشتراك سنوي في منصة «{{brand}}» للمحاسبة المالية</h2>
+<p>إنه في يوم <b>{{hijriDate}} هـ</b> الموافق <b>{{gregorianDate}} م</b>، اتفق الطرفان المذكوران أدناه على إبرام هذا العقد وفقاً للشروط التالية:</p>
+
+<div class="card">
+  <p><b>الطرف الأول:</b> {{companyName}} - {{brand}}، الرقم الموحّد للمنشآت: <b class="ltr">{{companyUnified}}</b>، ويمثلها الأستاذ/ة <b>{{gmName}}</b>، بصفته المدير العام لـ{{companyName}}، ممثلاً لمنصة {{brand}} للمحاسبة المالية. ويُشار إليه فيما يلي بـ«الطرف الأول» أو «الشركة-جداره».</p>
+  <p><b>الطرف الثاني:</b> منشأة <b>{{clientName}}</b>، يمثلها الأستاذ/ة <b>{{clientRep}}</b>، الرقم الوطني الموحد للمنشآت: <b class="ltr">{{clientUnified}}</b>، السجل التجاري: <b class="ltr">{{clientCr}}</b>، هاتف: <b class="ltr">{{clientPhone}}</b>، بريد إلكتروني: <b class="ltr">{{clientEmail}}</b>. ويُشار إليه فيما يلي بـ«الطرف الثاني» أو «العميل».</p>
+</div>
+
+<div class="card summary">
+  <p><b>ملخص قيمة العقد:</b> الباقة <b>{{planName}}</b>، {{usersText}}. الاشتراك السنوي <b>{{annualPrice}} ر.س</b>{{{discountLine}}}، والمبلغ المستحق <b>{{firstYearTotal}} ر.س</b>.</p>
+  <p><b>الضريبة:</b> قيمة هذا العقد غير خاضعة لضريبة القيمة المضافة. المبلغ المذكور أعلاه هو المبلغ المستحق كاملاً، دون أي زيادة.</p>
+  <p>مدة العقد: <b>{{durationText}}</b> — من <span class="ltr">{{startDate}}</span> إلى <span class="ltr">{{endDate}}</span>.</p>
+</div>
+
+<div class="art"><h3>المادة 1 - موضوع العقد ومدته:</h3>
+<p>يلتزم الطرف الأول بتقديم اشتراك سنوي في منصة «{{brand}}» للمحاسبة المالية للطرف الثاني، يشمل تفعيل النظام وتسجيل المنشأة فيه وتوفير كافة ميزات المنصة وفق الباقة السنوية المعتمدة، لقاء رسم الاشتراك السنوي المتفق عليه بين الطرفين. وتكون مدة هذا العقد {{durationText}} تبدأ من تاريخ تعاقد الطرفين وإبرام هذا العقد وتوقيعه، وتنتهي بانقضاء هذه المدة ما لم يُجدَّد وفقاً للأحكام المنصوص عليها في هذا العقد.</p></div>
+
+<div class="art"><h3>المادة 2 - تطوير الخدمات ومراجعة الرسوم السنوية:</h3>
+<p>تتطوّر منصة «{{brand}}» باستمرار بإضافة ميزات جديدة وتحسين الخدمات ورفع فئات الباقات، ونظراً لزيادة القيمة الفعلية للخدمة المُقدَّمة، يحق للطرف الأول مراجعة قيمة الاشتراك السنوي بما يتناسب مع حجم التطور المُضاف، على ألّا تُطبَّق أي زيادة على المدة الجارية من العقد الحالي، وإنما تُحتسب عند التجديد السنوي وفق أحكامه.</p></div>
+
+<div class="art"><h3>المادة 3 - تسليم النظام وتفعيله وتدريب المستخدم:</h3>
+<p>عند إبرام هذا العقد ودفع رسوم الاشتراك، يلتزم الطرف الأول بتسليم النظام للطرف الثاني، وإتمام تسجيل المنشأة في المنصة، وتفعيل الاشتراك، وتقديم التدريب والتوجيه للشخص المخوّل لدى الطرف الثاني لاستلام النظام وتشغيله، ويقدّم الطرف الأول الدعم المرن عبر الاتصال المرئي Zoom أو بما يتناسب ويتفق عليه بين الطرفين.</p></div>
+
+<div class="art"><h3>المادة 4 - نقل بيانات المنشأة داخل النظام:</h3>
+<p>إذا تطلّب نقل بيانات المنشأة كاملة داخل النظام (كدليل الحسابات والأرصدة الافتتاحية والعملاء والموردين والأصناف) من قِبل الطرف الأول، فذلك برسوم إضافية يُحدَّد بها باتفاق الطرفين. وإن تولّى الطرف الثاني الترحيل بنفسه، فلا يستحقّ سوى رسوم الاشتراك السنوي دون أي رسوم إضافية.</p></div>
+
+<div class="art"><h3>المادة 5 - فترة التجربة والاسترداد:</h3>
+<p>يحق للطرف الثاني استخدام النظام لمدة {{trialDays}} يوماً من تاريخ التفعيل. فإن لم يناسبه النظام خلال هذه المدة جاز له المطالبة برد الرسوم المدفوعة. وبمضي فترة التجربة يُصبح الاشتراك سارياً ونافذاً وفعّالاً، ولا يحق بعدها الاسترداد، ويُلزم الطرف الثاني بالخضوع وتقديم الامتثال لجميع الجهات النظامية المختصة.</p></div>
+
+<div class="art"><h3>المادة 6 - التجديد:</h3>
+<p>يُجدَّد هذا العقد لمدة مماثلة بحسب أحكامه. وعلى الطرف الثاني إشعار الطرف الأول كتابياً قبل انتهاء العقد بستين (60) يوماً على الأقل برغبته في عدم التجديد؛ وإلا تجدد تلقائياً لنفس المدة وبنفس الشروط.</p></div>
+
+<div class="art"><h3>المادة 7 - الالتزام بعدد المستخدمين وترقية الباقة:</h3>
+<p>يلتزم الطرف الثاني بعدد المستخدمين المتفق عليه ضمن الباقة، وقدره <b>{{users}}</b>. فإن تجاوز الاستخدام الفعلي نطاق الباقة، يحق للطرف الأول إيقاف الاشتراك وترقية الباقة إلى ما يناسب الاستخدام، وتُعاد فوترة الفرق، ويُعاد تفعيل المنشأة عند سداده.</p></div>
+
+<div class="art"><h3>المادة 8 - الدعم الفني والصيانة:</h3>
+<p>في حال مواجهة الطرف الثاني لأي مشاكل تقنية أو خلل في النظام، يلتزم الطرف الأول بتقديم الدعم الفني اللازم لمعالجة الأعطال وإصلاح النظام وضمان استمرارية العمل وفق ما تقتضيه طبيعة المنصة، وتُوجَّه كافة طلبات الدعم الفني عبر البريد الإلكتروني: <b class="ltr">{{supportEmail}}</b>.</p></div>
+
+<div class="art"><h3>المادة 9 - إطلاع العميل على المميزات وإقراره بها:</h3>
+<p>يُقرّ الطرف الثاني بأنه اطّلع اطلاعاً كاملاً على كافة المميزات والوحدات المتوفّرة في منصة «{{brand}}» قبل إبرام هذا العقد، واقتنع بأنها تلبّي احتياجات منشأته. وبناءً على ذلك لا يحق له الاحتجاج لاحقاً بنقص ميزة أو وظيفة لم تُذكر صراحةً في ملحق بهذا العقد، ويُعدّ توقيعه إقراراً قاطعاً بقبول النظام كما هو وقت التعاقد، وبراءة ذمة الطرف الأول من أي مطالبة تستند إلى نقص مزعوم في المميزات.</p></div>
+
+<div class="art"><h3>المادة 10 - نطاق الدعم الفني والطلبات الإضافية:</h3>
+<p>يلتزم الطرف الأول بمعالجة أي عطل ضمن نطاق رسوم الاشتراك السنوي، وأي طلبات أو تكاملات إضافية تتجاوز المميزات المعتمدة - كالتكامل مع منصة «فاتورة» التابعة لهيئة الزكاة والضريبة والجمارك أو مع أنظمة وبوابات خارجية - فلا تُعدّ جزءاً منها، وتُحدَّد رسومها باتفاق خطي مستقل. ولا يحق للطرف الثاني الامتناع عن سداد الاشتراك بسببها.</p></div>
+
+<div class="art"><h3>المادة 11 - الترخيص باستخدام شعار المنشأة لأغراض التحسين التعريفي:</h3>
+<p>يوافق الطرف الثاني على أن يحق للطرف الأول إدراج اسم منشأته وشعارها ضمن قائمة عملائه وفي ملفه التعريفي والمحتوى التسويقي الخاص بها، وذلك لأغراض التحسين التعريفي لمنصة «{{brand}}» فقط لا غير. ويُقرّ الطرف الثاني بأن هذا الإدراج لا يُنشئ أي التزام أو مسؤولية أو أثراً قانونياً على منصة «{{brand}}» من قِبَله، ولا يُعدّ شراكة قانونية أو توكيلاً، وعلى ألّا يشكّل ذلك أي خلل أو التزام أو تعدي قانوني على «{{brand}}» من قِبل الطرف الثاني.</p></div>
+
+<div class="art"><h3>المادة 12 - حل النزاعات:</h3>
+<p>أي نزاع ينشأ حول تفسير أو تنفيذ هذا العقد وتعذّر حله ودياً بين الطرفين، يُحال إلى الجهات النظامية المختصة في المملكة العربية السعودية لفضّه وفقاً للأنظمة المعمول بها.</p></div>
+
+<p class="closing">إثباتاً لما تقدّم، حُرّر هذا العقد من نسختين أصليتين، وقد وقّع الطرفان أدناه على جميع بنوده وشروطه.</p>
+
+<table class="sign"><tr>
+  <td>
+    <h4>الطرف الأول - {{companyName}} - {{brand}}</h4>
+    <div class="box" style="height:auto;border:none;padding:0;text-align:right"><img class="stamp" src="{{stampImg}}"> <span class="muted" style="margin-right:14px">مساحة التوقيع</span></div>
+    <div class="kv"><b>الاسم:</b> {{gmName}}<br><b>المدير العام - {{companyName}}</b><br><b>الرقم الموحّد:</b> <span class="ltr">{{companyUnified}}</span><br><b>التاريخ:</b> {{hijriDate}} هـ</div>
+  </td>
+  <td>
+    <h4>الطرف الثاني - العميل</h4>
+    <table><tr><td style="padding:0 4px 0 0"><div class="box">التوقيع</div></td><td style="padding:0 0 0 4px"><div class="box">الختم</div></td></tr></table>
+    <div class="kv"><b>المنشأة:</b> {{clientName}}<br><b>الممثِّل:</b> {{clientRep}}<br><b>الرقم الموحّد:</b> <span class="ltr">{{clientUnified}}</span><br><b>التاريخ:</b> ....... - ....... - .......... هـ</div>
+  </td>
+</tr></table>
+
+</body>
+</html>
